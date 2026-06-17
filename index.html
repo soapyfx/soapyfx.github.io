@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>soapyfx · kho công cụ</title>
+    <!-- PWA manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogInNvYXB5ZnggLSB0aOG6rSB24bulIEPDtG5nIGPhu6UiLAogICJzaG9ydF9uYW1lIjogInNvYXB5ZngiLAogICJkZXNjcmlwdGlvbiI6ICJUaOG6rSB24bulIHPGoW4gZOG7pW5nIGPDoWMgxJBhbiBwaOG6p20gbeG7mXQgY8O0bmcgY+G7pS4iLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiNmZmZmZmYiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDUwIDUwJyB3aWR0aD0nNTAwJyBoZWlnaHQ9JzUwMCclM0UlM0NyZWN0IHdpZHRoPSc1MCcgaGVpZ2h0PSc1MCcgZmlsbD0nJTIzZmZmZmZmJyBzdHJva2U9JyUyMzAwMCcgc3Ryb2tlLXdpZHRoPScyJy8lM0UlM0N0ZXh0IHg9JzEwJyB5PSczMCcgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnIGZvbnQtc2l6ZT0nMjAnIGZpbGw9JyUyMzAwMCclM0VzZiUzQy90ZXh0JTNFJTNDL3N2ZyUzRQoiLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <style>
+        /* reset & base – vuông vức, thô kệch, không bo góc */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            min-height: 100vh;
+            background: #ffffff;
+            color: #111111;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            /* không bo góc bất kỳ đâu */
+            border-radius: 0 !important;
+        }
+        /* tất cả element đều vuông */
+        * {
+            border-radius: 0 !important;
+        }
+        a, button, input, textarea, select, .card, .box, .btn, .container, .header, .footer, .nav, .item {
+            border-radius: 0 !important;
+        }
+        /* layout chính */
+        .app {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* header thô */
+        .header {
+            border-bottom: 3px solid #000000;
+            padding: 16px 0 12px 0;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            background: #fff;
+            display: inline-block;
+            padding-right: 12px;
+        }
+        .header h1 small {
+            font-size: 1rem;
+            font-weight: 400;
+            text-transform: none;
+            color: #333;
+            margin-left: 10px;
+        }
+        .header .badge {
+            border: 2px solid #000;
+            padding: 6px 14px;
+            background: #fff;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        /* công cụ tìm kiếm / lọc – vuông như đá */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 12px 0;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+        }
+        .toolbar input, .toolbar select {
+            background: #ffffff;
+            border: 2px solid #111111;
+            padding: 10px 14px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            flex: 1 1 200px;
+            outline: none;
+            color: #000;
+            border-radius: 0;
+        }
+        .toolbar input:focus, .toolbar select:focus {
+            background: #f0f0f0;
+            border-color: #000;
+        }
+        .toolbar .btn {
+            background: #ffffff;
+            border: 2px solid #111111;
+            padding: 10px 24px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.1s linear;
+            color: #000;
+            letter-spacing: 0.3px;
+            border-radius: 0;
+            flex: 0 1 auto;
+        }
+        .toolbar .btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+        .toolbar .btn-outline {
+            background: transparent;
+            border: 2px solid #000;
+        }
+        /* grid lưu trữ – các thẻ ứng dụng đơn, vuông vức */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 12px;
+        }
+        .card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 18px 16px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            transition: 0.08s linear;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.08);
+        }
+        .card:hover {
+            background: #fafafa;
+            box-shadow: 12px 12px 0 rgba(0,0,0,0.12);
+            transform: translate(-2px, -2px);
+        }
+        .card .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+        .card .app-desc {
+            font-size: 0.9rem;
+            color: #222;
+            margin-bottom: 16px;
+            flex: 1;
+            font-weight: 400;
+        }
+        .card .app-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 2px solid #ddd;
+            padding-top: 12px;
+            margin-top: 6px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .card .app-meta .tag {
+            background: #000;
+            color: #fff;
+            padding: 3px 10px;
+            font-weight: 600;
+            border: none;
+        }
+        .card .app-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .card .app-actions .btn-sm {
+            background: #fff;
+            border: 2px solid #000;
+            padding: 6px 12px;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.08s linear;
+            color: #000;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            flex: 1;
+            border-radius: 0;
+        }
+        .card .app-actions .btn-sm:hover {
+            background: #000;
+            color: #fff;
+        }
+        .card .app-actions .btn-sm.danger {
+            border-color: #990000;
+            color: #990000;
+        }
+        .card .app-actions .btn-sm.danger:hover {
+            background: #990000;
+            color: #fff;
+        }
+        /* footer thô mộc */
+        .footer {
+            margin-top: 48px;
+            padding: 20px 0 16px 0;
+            border-top: 3px solid #000000;
+            text-align: left;
+            font-size: 0.85rem;
+            color: #111;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .footer a {
+            color: #000;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+        .footer a:hover {
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+        }
+        /* trạng thái trống */
+        .empty-state {
+            border: 3px solid #000;
+            padding: 40px 20px;
+            text-align: center;
+            grid-column: 1 / -1;
+            background: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        /* pwa install hint */
+        .pwa-hint {
+            margin-top: 8px;
+            padding: 4px 0;
+            border-top: 2px solid #ccc;
+            border-bottom: 2px solid #ccc;
+            font-size: 0.8rem;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .pwa-hint span {
+            background: #f0f0f0;
+            padding: 2px 12px;
+            border: 1px solid #aaa;
+        }
+        /* responsive nhẹ */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .toolbar {
+                flex-direction: column;
+            }
+            .toolbar input, .toolbar select, .toolbar .btn {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* override mọi bo góc (lần nữa) */
+        .card, .card *, .toolbar *, .header, .footer, .btn, .btn-sm, input, select, .badge, .pwa-hint span {
+            border-radius: 0 !important;
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <!-- header thô kệch -->
+    <header class="header">
+        <h1>soapyfx <small>kho công cụ</small></h1>
+        <div class="badge">⚡ single‑app · pwa</div>
+    </header>
+
+    <!-- thanh công cụ vuông -->
+    <div class="toolbar">
+        <input type="text" id="searchInput" placeholder="🔍 tìm công cụ..." aria-label="Tìm kiếm">
+        <select id="filterSelect" aria-label="Lọc theo danh mục">
+            <option value="all">📂 tất cả</option>
+            <option value="tiện ích">tiện ích</option>
+            <option value="đồ họa">đồ họa</option>
+            <option value="văn phòng">văn phòng</option>
+            <option value="phát triển">phát triển</option>
+            <option value="giải trí">giải trí</option>
+        </select>
+        <button class="btn" id="addAppBtn">➕ thêm app</button>
+        <button class="btn btn-outline" id="resetFilterBtn">↺ reset</button>
+    </div>
+
+    <!-- grid lưu trữ các ứng dụng đơn -->
+    <div class="grid" id="appGrid">
+        <!-- các card sẽ được render bằng js -->
+    </div>
+
+    <!-- thông tin pwa & thư viện -->
+    <div class="pwa-hint">
+        <span>📦 PWA ready</span>
+        <span>📄 single html · css · js</span>
+        <span>🧱 không bo góc</span>
+        <span>⬜ trắng thô</span>
+    </div>
+
+    <!-- footer vuông vức -->
+    <footer class="footer">
+        <span>soapyfx.github.io · thư viện công cụ</span>
+        <span><a href="#" id="installPwaLink">cài pwa</a> · <a href="#" id="exportDataLink">xuất dữ liệu</a></span>
+    </footer>
+</div>
+
+<script>
+    (function() {
+        // ----- data mẫu (thư viện công cụ) -----
+        let apps = [
+            { id: 'app1', title: 'Chuyển đổi JSON → CSV', desc: 'Biến JSON thành CSV tức thì, không cần kết nối.', category: 'tiện ích', url: '#' },
+            { id: 'app2', title: 'Trình chỉnh sửa ảnh cơ bản', desc: 'Cắt, xoay, lọc đen trắng. Đơn giản và nhanh.', category: 'đồ họa', url: '#' },
+            { id: 'app3', title: 'Ghi chú nhanh', desc: 'Lưu ghi chú trong trình duyệt (localStorage).', category: 'văn phòng', url: '#' },
+            { id: 'app4', title: 'Mã hóa / giải mã Base64', desc: 'Mã hóa hoặc giải mã văn bản sang Base64.', category: 'phát triển', url: '#' },
+            { id: 'app5', title: 'Trình đếm thời gian Pomodoro', desc: 'Focus 25 phút, nghỉ 5 phút. Âm thanh báo.', category: 'tiện ích', url: '#' },
+            { id: 'app6', title: 'Trình tạo màu sắc', desc: 'Tạo mã màu HEX ngẫu nhiên và sao chép.', category: 'đồ họa', url: '#' },
+            { id: 'app7', title: 'To-do list tối giản', desc: 'Thêm, xóa, hoàn thành công việc. Lưu vào storage.', category: 'văn phòng', url: '#' },
+            { id: 'app8', title: 'Máy tính tam giác', desc: 'Máy tính tam giác.', category: 'phát triển', url: '#' }
+        ];
+
+        // state
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        // DOM refs
+        const gridEl = document.getElementById('appGrid');
+        const searchInput = document.getElementById('searchInput');
+        const filterSelect = document.getElementById('filterSelect');
+        const addBtn = document.getElementById('addAppBtn');
+        const resetBtn = document.getElementById('resetFilterBtn');
+        const installLink = document.getElementById('installPwaLink');
+        const exportLink = document.getElementById('exportDataLink');
+
+        // ----- render engine (thô) -----
+        function renderApps() {
+            const filtered = apps.filter(app => {
+                // lọc theo category
+                if (currentFilter !== 'all' && app.category !== currentFilter) return false;
+                // tìm kiếm
+                if (searchQuery.trim() !== '') {
+                    const q = searchQuery.trim().toLowerCase();
+                    const inTitle = app.title.toLowerCase().includes(q);
+                    const inDesc = app.desc.toLowerCase().includes(q);
+                    if (!inTitle && !inDesc) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                gridEl.innerHTML = `<div class="empty-state">🧹 không có công cụ nào phù hợp</div>`;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(app => {
+                html += `
+                    <div class="card" data-id="${app.id}">
+                        <div class="app-title">${app.title}</div>
+                        <div class="app-desc">${app.desc}</div>
+                        <div class="app-meta">
+                            <span class="tag">${app.category}</span>
+                            <span>#${app.id.slice(-3)}</span>
+                        </div>
+                        <div class="app-actions">
+                            <a href="${app.url}" class="btn-sm" target="_blank">▶ mở</a>
+                            <button class="btn-sm danger" data-action="delete" data-id="${app.id}">✕ xóa</button>
+                        </div>
+                    </div>
+                `;
+            });
+            gridEl.innerHTML = html;
+
+            // gắn sự kiện xóa cho từng nút
+            document.querySelectorAll('[data-action="delete"]').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const id = this.getAttribute('data-id');
+                    if (confirm(`Xóa ứng dụng "${apps.find(a => a.id === id)?.title || id}" ?`)) {
+                        apps = apps.filter(a => a.id !== id);
+                        renderApps();
+                        // lưu vào localStorage (tự động)
+                        saveToLocal();
+                    }
+                });
+            });
+        }
+
+        // ----- lưu / tải localStorage (mô phỏng thư viện) -----
+        function saveToLocal() {
+            try {
+                localStorage.setItem('soapyfx_apps', JSON.stringify(apps));
+            } catch (e) { /* bỏ qua */ }
+        }
+
+        function loadFromLocal() {
+            try {
+                const data = localStorage.getItem('soapyfx_apps');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        apps = parsed;
+                    }
+                }
+            } catch (e) { /* nếu lỗi thì giữ mặc định */ }
+        }
+
+        // ----- thêm app mới (fake) -----
+        function addNewApp() {
+            const title = prompt('📝 Tên công cụ:', 'App mới');
+            if (title === null || title.trim() === '') return;
+            const desc = prompt('📄 Mô tả ngắn:', 'Mô tả chức năng...');
+            if (desc === null) return;
+            const cat = prompt('📁 Danh mục (tiện ích, đồ họa, văn phòng, phát triển, giải trí):', 'tiện ích');
+            if (cat === null) return;
+            const validCats = ['tiện ích', 'đồ họa', 'văn phòng', 'phát triển', 'giải trí'];
+            const category = validCats.includes(cat.trim()) ? cat.trim() : 'tiện ích';
+
+            const newApp = {
+                id: 'app' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                title: title.trim(),
+                desc: desc.trim() || 'Không có mô tả.',
+                category: category,
+                url: '#',
+            };
+            apps.push(newApp);
+            renderApps();
+            saveToLocal();
+        }
+
+        // ----- reset filter -----
+        function resetFilter() {
+            searchInput.value = '';
+            filterSelect.value = 'all';
+            searchQuery = '';
+            currentFilter = 'all';
+            renderApps();
+        }
+
+        // ----- export data (json) -----
+        function exportData() {
+            const dataStr = JSON.stringify(apps, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'soapyfx_library.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // ----- xử lý PWA install (chỉ để hiển thị) -----
+        function handlePwaInstall() {
+            alert('📲 Trang web này hỗ trợ PWA. Trên trình duyệt di động, chọn "Thêm vào màn hình chính" hoặc cài đặt qua menu.\n(Đây là trang demo single‑app)');
+        }
+
+        // ----- sự kiện -----
+        searchInput.addEventListener('input', function() {
+            searchQuery = this.value;
+            renderApps();
+        });
+
+        filterSelect.addEventListener('change', function() {
+            currentFilter = this.value;
+            renderApps();
+        });
+
+        addBtn.addEventListener('click', addNewApp);
+        resetBtn.addEventListener('click', resetFilter);
+        installLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            handlePwaInstall();
+        });
+        exportLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            exportData();
+        });
+
+        // khởi tạo: load từ localStorage, render
+        loadFromLocal();
+        renderApps();
+
+        // thông báo console
+        console.log('🧼 soapyfx · thư viện công cụ vuông vức, không bo góc');
+        console.log('📦 PWA manifest được nhúng (base64)');
+    })();
+</script>
+</body>
+</html>
