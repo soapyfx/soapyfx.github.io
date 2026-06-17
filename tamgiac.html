@@ -1,616 +1,603 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công cụ Chứng minh Tam giác</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔺 Tam giác · Chứng minh trực quan</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    body {
+      background: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-        .container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            max-width: 1200px;
-            width: 100%;
-            padding: 30px;
-        }
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      background: white;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid #eaeef2;
+      padding: 28px 32px 32px 32px;
+    }
 
-        .header {
-            margin-bottom: 30px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 20px;
-        }
+    .header {
+      margin-bottom: 28px;
+      border-bottom: 2px solid #eef2f6;
+      padding-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
 
-        .header h1 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 8px;
-        }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: #0b1a2f;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .header p {
-            font-size: 14px;
-            color: #666;
-        }
+    .header h1 span {
+      background: #f0f4fe;
+      padding: 0 8px;
+      border-radius: 4px;
+      font-size: 22px;
+    }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
+    .header p {
+      font-size: 14px;
+      color: #5a6d7e;
+      font-weight: 450;
+      background: #f5f8fb;
+      padding: 6px 14px;
+      border: 1px solid #e2e8f0;
+    }
 
-        @media (max-width: 900px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-        }
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
 
-        .canvas-section {
-            display: flex;
-            flex-direction: column;
-        }
+    @media (max-width: 980px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+    }
 
-        .canvas-section h2 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
+    /* Canvas block — vuông vức, không bo tròn */
+    .canvas-wrapper {
+      background: #ffffff;
+      border: 1px solid #dce2ea;
+      padding: 16px 16px 12px 16px;
+    }
 
-        canvas {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            background: white;
-            cursor: grab;
-            flex: 1;
-            min-height: 400px;
-            display: block;
-            width: 100%;
-            height: 400px;
-        }
+    .canvas-wrapper h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e2b3c;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
-        canvas:active {
-            cursor: grabbing;
-        }
+    canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 600 / 400;
+      background: #fbfdff;
+      border: 1px solid #d0d8e2;
+      cursor: grab;
+      transition: border 0.1s ease;
+    }
 
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    canvas:active {
+      cursor: grabbing;
+      border-color: #7b8ba3;
+    }
 
-        button {
-            padding: 10px 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: white;
-            color: #333;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
+    .canvas-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
 
-        button:hover {
-            background: #f5f5f5;
-            border-color: #999;
-        }
+    .canvas-actions button {
+      background: white;
+      border: 1px solid #d0d8e2;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1f2a3a;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      letter-spacing: 0.01em;
+      background: #fafcff;
+    }
 
-        button:active {
-            transform: scale(0.98);
-        }
+    .canvas-actions button:hover {
+      background: #edf2f9;
+      border-color: #a5b6cc;
+    }
 
-        .info-section {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .canvas-actions button:active {
+      background: #e0e7f0;
+      transform: scale(0.98);
+    }
 
-        .info-card {
-            background: #f9f9f9;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 16px;
-        }
+    .tip {
+      font-size: 12px;
+      color: #6c7e91;
+      background: #f6f9fd;
+      padding: 8px 12px;
+      margin-top: 12px;
+      border-left: 3px solid #8a9cb0;
+      border: 1px solid #e2e9f2;
+      border-left-width: 4px;
+    }
 
-        .info-card h3 {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+    /* Info panel — thẳng, không bo tròn */
+    .info-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
-        .classification {
-            font-size: 18px;
-            color: #667eea;
-            font-weight: 700;
-        }
+    .card {
+      background: #ffffff;
+      border: 1px solid #dce2ea;
+      padding: 16px 18px 18px 18px;
+    }
 
-        .measurement-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    .card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2b3c;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 8px;
+    }
 
-        .measurement-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
-        }
+    .classification-badge {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1d3a6f;
+      background: #f0f6fe;
+      display: inline-block;
+      padding: 4px 14px 4px 12px;
+      border: 1px solid #d3def0;
+      letter-spacing: 0.01em;
+    }
 
-        .measurement-item:last-child {
-            border-bottom: none;
-        }
+    .measurement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
 
-        .measurement-label {
-            font-size: 13px;
-            color: #666;
-        }
+    .measurement-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #edf2f7;
+      font-size: 14px;
+    }
 
-        .measurement-value {
-            font-size: 14px;
-            color: #333;
-            font-weight: 600;
-        }
+    .measurement-item:last-child {
+      border-bottom: none;
+    }
 
-        .angle-total {
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 2px solid #e0e0e0;
-        }
+    .measurement-label {
+      color: #445566;
+    }
 
-        .angle-total .measurement-item {
-            border-bottom: none;
-        }
+    .measurement-value {
+      font-weight: 600;
+      color: #0b1f33;
+    }
 
-        .angle-total .measurement-value {
-            color: #667eea;
-        }
+    .angle-total {
+      margin-top: 6px;
+      padding-top: 8px;
+      border-top: 2px solid #d5dee9;
+    }
 
-        .footer-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+    .angle-total .measurement-value {
+      color: #1d4a7a;
+    }
 
-        @media (max-width: 900px) {
-            .footer-section {
-                grid-template-columns: 1fr;
-            }
-        }
+    /* Footer giả thuyết – kết luận, vuông vức */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      margin-top: 8px;
+    }
 
-        .hypothesis-card, .conclusion-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #f0f3f7 100%);
-            border: 1px solid #d0d8e8;
-            border-radius: 8px;
-            padding: 16px;
-        }
+    @media (max-width: 780px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
 
-        .hypothesis-card h3, .conclusion-card h3 {
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
+    .hypothesis-card, .conclusion-card {
+      background: #fbfdff;
+      border: 1px solid #dce2ea;
+      padding: 16px 18px 18px 18px;
+    }
 
-        .hypothesis-card ul, .conclusion-card ul {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+    .hypothesis-card h3, .conclusion-card h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1f2b3c;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #edf2f7;
+      padding-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
 
-        .hypothesis-card li, .conclusion-card li {
-            font-size: 13px;
-            color: #555;
-            padding-left: 20px;
-            position: relative;
-            line-height: 1.5;
-        }
+    .hypothesis-card ul, .conclusion-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-        .hypothesis-card li::before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
-        }
+    .hypothesis-card li, .conclusion-card li {
+      font-size: 13.5px;
+      color: #1f2f42;
+      padding-left: 22px;
+      position: relative;
+      line-height: 1.5;
+    }
 
-        .conclusion-card li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #10b981;
-            font-weight: bold;
-        }
+    .hypothesis-card li::before {
+      content: "▸";
+      position: absolute;
+      left: 2px;
+      color: #3865a0;
+      font-weight: 600;
+    }
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .conclusion-card li::before {
+      content: "✓";
+      position: absolute;
+      left: 0px;
+      color: #1e7b4c;
+      font-weight: 600;
+    }
 
-        .tooltip {
-            font-size: 12px;
-            color: #999;
-            margin-top: 8px;
-            padding: 8px;
-            background: #f9f9f9;
-            border-left: 2px solid #667eea;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-
-            .header h1 {
-                font-size: 22px;
-            }
-
-            .main-content {
-                gap: 20px;
-            }
-
-            canvas {
-                min-height: 300px;
-            }
-        }
-    </style>
+    /* tweaks cho responsive */
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px 14px;
+      }
+      .header h1 {
+        font-size: 22px;
+      }
+      .card {
+        padding: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔺 Công cụ Chứng minh Tam giác</h1>
-            <p>Kéo các điểm A, B, C để tạo tam giác. Độ dài cạnh và góc được tính toán tự động.</p>
-        </div>
+<div class="container">
+  <div class="header">
+    <h1><span>△</span> Chứng minh tam giác</h1>
+    <p>Kéo A, B, C · số liệu tự động</p>
+  </div>
 
-        <div class="main-content">
-            <!-- Canvas Section -->
-            <div class="canvas-section">
-                <h2>Vẽ Tam giác</h2>
-                <canvas id="triangleCanvas" width="600" height="400" style="display: block;"></canvas>
-                <div class="button-group">
-                    <button onclick="resetTriangle()">↻ Đặt lại</button>
-                    <button onclick="randomTriangle()">🎲 Ngẫu nhiên</button>
-                </div>
-                <div class="tooltip">
-                    💡 Gợi ý: Nhấp và kéo các điểm để thay đổi hình dạng tam giác
-                </div>
-            </div>
-
-            <!-- Info Section -->
-            <div class="info-section">
-                <div class="info-card">
-                    <h3>📊 Phân loại Tam giác</h3>
-                    <div class="classification" id="classification">Tam giác thường</div>
-                </div>
-
-                <div class="info-card">
-                    <h3>📏 Độ dài các Cạnh</h3>
-                    <div class="measurement-list" id="sidesList"></div>
-                </div>
-
-                <div class="info-card">
-                    <h3>∠ Độ lớn các Góc</h3>
-                    <div class="measurement-list" id="anglesList"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Hypothesis and Conclusion -->
-        <div class="footer-section">
-            <div class="hypothesis-card">
-                <h3>📋 Giả thuyết</h3>
-                <ul id="hypothesisList"></ul>
-            </div>
-
-            <div class="conclusion-card">
-                <h3>✓ Kết luận</h3>
-                <ul id="conclusionList"></ul>
-            </div>
-        </div>
+  <div class="main-grid">
+    <!-- Canvas -->
+    <div class="canvas-wrapper">
+      <h2>📐 Vẽ tam giác</h2>
+      <canvas id="triangleCanvas" width="600" height="400"></canvas>
+      <div class="canvas-actions">
+        <button onclick="resetTriangle()">↻ Đặt lại</button>
+        <button onclick="randomTriangle()">🎲 Ngẫu nhiên</button>
+      </div>
+      <div class="tip">
+        💡 Kéo các điểm đỉnh để thay đổi hình dạng
+      </div>
     </div>
 
-    <script>
-        const canvas = document.getElementById('triangleCanvas');
-        const ctx = canvas.getContext('2d');
+    <!-- Info -->
+    <div class="info-panel">
+      <div class="card">
+        <h3>📊 Phân loại</h3>
+        <div class="classification-badge" id="classification">Tam giác thường</div>
+      </div>
 
-        let points = [
-            { x: 150, y: 100, id: 'A' },
-            { x: 450, y: 100, id: 'B' },
-            { x: 300, y: 300, id: 'C' }
-        ];
+      <div class="card">
+        <h3>📏 Độ dài cạnh</h3>
+        <div class="measurement-list" id="sidesList"></div>
+      </div>
 
-        let draggingPoint = null;
+      <div class="card">
+        <h3>∠ Góc</h3>
+        <div class="measurement-list" id="anglesList"></div>
+      </div>
+    </div>
+  </div>
 
-        // Khởi tạo canvas
-        function initCanvas() {
-            points = [
-                { x: canvas.width * 0.25, y: canvas.height * 0.25, id: 'A' },
-                { x: canvas.width * 0.75, y: canvas.height * 0.25, id: 'B' },
-                { x: canvas.width * 0.5, y: canvas.height * 0.75, id: 'C' }
-            ];
-            draw();
-            updateMeasurements();
-        }
+  <!-- Footer: giả thuyết + kết luận -->
+  <div class="footer-grid">
+    <div class="hypothesis-card">
+      <h3>📋 Giả thuyết</h3>
+      <ul id="hypothesisList"></ul>
+    </div>
+    <div class="conclusion-card">
+      <h3>✓ Kết luận</h3>
+      <ul id="conclusionList"></ul>
+    </div>
+  </div>
+</div>
 
-        function getMousePos(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (e.clientX - rect.left) * scaleX;
-            const y = (e.clientY - rect.top) * scaleY;
-            return { x, y };
-        }
+<script>
+  (function() {
+    const canvas = document.getElementById('triangleCanvas');
+    const ctx = canvas.getContext('2d');
 
-        // Event listeners
-        canvas.addEventListener('mousedown', (e) => {
-            const pos = getMousePos(e);
-            const point = points.find(p => 
-                Math.sqrt((p.x - pos.x) ** 2 + (p.y - pos.y) ** 2) < 15
-            );
+    // state
+    let points = [
+      { x: 150, y: 100, id: 'A' },
+      { x: 450, y: 100, id: 'B' },
+      { x: 300, y: 300, id: 'C' }
+    ];
+    let dragging = null;
 
-            if (point) {
-                draggingPoint = point;
-                canvas.style.cursor = 'grabbing';
-                e.preventDefault();
-            }
-        });
+    // helpers
+    function dist(p1, p2) {
+      return Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    }
 
-        document.addEventListener('mousemove', (e) => {
-            if (!draggingPoint) return;
+    function angleDeg(p1, p2, p3) {
+      const a = dist(p2, p3);
+      const b = dist(p1, p3);
+      const c = dist(p1, p2);
+      const cosC = (a * a + b * b - c * c) / (2 * a * b);
+      const clamped = Math.max(-1, Math.min(1, cosC));
+      return (Math.acos(clamped) * 180) / Math.PI;
+    }
 
-            const pos = getMousePos(e);
-            
-            // Constrain to canvas bounds
-            let x = Math.max(30, Math.min(pos.x, canvas.width - 30));
-            let y = Math.max(30, Math.min(pos.y, canvas.height - 30));
+    function getSides() {
+      return [
+        { name: 'AB', length: dist(points[0], points[1]) },
+        { name: 'BC', length: dist(points[1], points[2]) },
+        { name: 'AC', length: dist(points[0], points[2]) }
+      ];
+    }
 
-            draggingPoint.x = x;
-            draggingPoint.y = y;
+    function getAngles() {
+      return [
+        { vertex: 'A', value: angleDeg(points[0], points[1], points[2]) },
+        { vertex: 'B', value: angleDeg(points[1], points[0], points[2]) },
+        { vertex: 'C', value: angleDeg(points[2], points[0], points[1]) }
+      ];
+    }
 
-            draw();
-            updateMeasurements();
-        });
+    function classify() {
+      const sides = getSides();
+      const sorted = [...sides].sort((a, b) => a.length - b.length);
+      const a = sorted[0].length, b = sorted[1].length, c = sorted[2].length;
 
-        document.addEventListener('mouseup', () => {
-            if (draggingPoint) {
-                draggingPoint = null;
-                canvas.style.cursor = 'grab';
-            }
-        });
+      const isRight = Math.abs(a * a + b * b - c * c) < 5;
+      const eq = Math.abs(a - b) < 0.1 && Math.abs(b - c) < 0.1;
+      const iso = Math.abs(a - b) < 1 || Math.abs(b - c) < 1 || Math.abs(a - c) < 1;
 
-        canvas.addEventListener('mouseenter', () => {
-            canvas.style.cursor = draggingPoint ? 'grabbing' : 'grab';
-        });
+      if (eq) return 'Tam giác đều';
+      if (isRight) return 'Tam giác vuông';
+      if (iso) return 'Tam giác cân';
+      return 'Tam giác thường';
+    }
 
-        canvas.addEventListener('mouseleave', () => {
-            canvas.style.cursor = 'default';
-        });
+    // draw
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Calculate functions
-        function distance(p1, p2) {
-            return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
-        }
+      // grid nhẹ
+      ctx.strokeStyle = '#e9edf4';
+      ctx.lineWidth = 0.6;
+      for (let i = 0; i < canvas.width; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+      }
+      for (let i = 0; i < canvas.height; i += 50) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
 
-        function angle(p1, p2, p3) {
-            const a = distance(p2, p3);
-            const b = distance(p1, p3);
-            const c = distance(p1, p2);
-            const cosC = (a * a + b * b - c * c) / (2 * a * b);
-            const clampedCosC = Math.max(-1, Math.min(1, cosC));
-            return (Math.acos(clampedCosC) * 180) / Math.PI;
-        }
+      const sides = getSides();
 
-        function getSides() {
-            return [
-                { name: 'AB', length: distance(points[0], points[1]) },
-                { name: 'BC', length: distance(points[1], points[2]) },
-                { name: 'AC', length: distance(points[0], points[2]) }
-            ];
-        }
+      // vẽ tam giác
+      ctx.strokeStyle = '#1f3d6b';
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      ctx.lineTo(points[1].x, points[1].y);
+      ctx.lineTo(points[2].x, points[2].y);
+      ctx.closePath();
+      ctx.stroke();
 
-        function getAngles() {
-            return [
-                { vertex: 'A', value: angle(points[0], points[1], points[2]) },
-                { vertex: 'B', value: angle(points[1], points[0], points[2]) },
-                { vertex: 'C', value: angle(points[2], points[0], points[1]) }
-            ];
-        }
+      // cạnh
+      ctx.fillStyle = '#1a2d47';
+      ctx.font = '500 13px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
 
-        function classifyTriangle() {
-            const sides = getSides();
-            const sortedSides = [...sides].sort((a, b) => a.length - b.length);
-            const a = sortedSides[0].length;
-            const b = sortedSides[1].length;
-            const c = sortedSides[2].length;
+      const midAB = { x: (points[0].x + points[1].x)/2, y: (points[0].y + points[1].y)/2 - 14 };
+      ctx.fillText(sides[0].length.toFixed(1), midAB.x, midAB.y);
 
-            const isRight = Math.abs(a * a + b * b - c * c) < 5;
-            const isEquilateral = Math.abs(a - b) < 0.1 && Math.abs(b - c) < 0.1;
-            const isIsosceles = Math.abs(a - b) < 1 || Math.abs(b - c) < 1 || Math.abs(a - c) < 1;
+      const midBC = { x: (points[1].x + points[2].x)/2 + 18, y: (points[1].y + points[2].y)/2 + 4 };
+      ctx.textBaseline = 'middle';
+      ctx.fillText(sides[1].length.toFixed(1), midBC.x, midBC.y);
 
-            if (isEquilateral) return 'Tam giác đều';
-            if (isRight) return 'Tam giác vuông';
-            if (isIsosceles) return 'Tam giác cân';
-            return 'Tam giác thường';
-        }
+      const midAC = { x: (points[0].x + points[2].x)/2 - 18, y: (points[0].y + points[2].y)/2 + 4 };
+      ctx.fillText(sides[2].length.toFixed(1), midAC.x, midAC.y);
 
-        // Drawing function
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // đỉnh
+      points.forEach(p => {
+        ctx.fillStyle = '#1f3d6b';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.strokeStyle = 'white';
+        ctx.lineWidth = 2;
+        ctx.stroke();
 
-            // Draw grid
-            ctx.strokeStyle = '#f0f0f0';
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < canvas.width; i += 50) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, canvas.height);
-                ctx.stroke();
-            }
-            for (let i = 0; i < canvas.height; i += 50) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(canvas.width, i);
-                ctx.stroke();
-            }
+        ctx.fillStyle = '#0b1d32';
+        ctx.font = 'bold 14px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+        ctx.fillText(p.id, p.x, p.y - 12);
+      });
+    }
 
-            const sides = getSides();
+    // update bảng
+    function updateUI() {
+      const sides = getSides();
+      const angles = getAngles();
 
-            // Draw triangle sides
-            ctx.strokeStyle = '#667eea';
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.moveTo(points[0].x, points[0].y);
-            ctx.lineTo(points[1].x, points[1].y);
-            ctx.stroke();
+      document.getElementById('classification').textContent = classify();
 
-            ctx.beginPath();
-            ctx.moveTo(points[1].x, points[1].y);
-            ctx.lineTo(points[2].x, points[2].y);
-            ctx.stroke();
+      const sidesList = document.getElementById('sidesList');
+      sidesList.innerHTML = sides.map(s => `
+        <div class="measurement-item">
+          <span class="measurement-label">${s.name}</span>
+          <span class="measurement-value">${s.length.toFixed(2)}</span>
+        </div>
+      `).join('');
 
-            ctx.beginPath();
-            ctx.moveTo(points[2].x, points[2].y);
-            ctx.lineTo(points[0].x, points[0].y);
-            ctx.stroke();
+      const anglesList = document.getElementById('anglesList');
+      const total = angles.reduce((sum, a) => sum + a.value, 0);
+      anglesList.innerHTML = angles.map(a => `
+        <div class="measurement-item">
+          <span class="measurement-label">∠${a.vertex}</span>
+          <span class="measurement-value">${a.value.toFixed(2)}°</span>
+        </div>
+      `).join('') + `
+        <div class="measurement-item angle-total">
+          <span class="measurement-label">Tổng</span>
+          <span class="measurement-value">${total.toFixed(2)}°</span>
+        </div>
+      `;
 
-            // Draw side length labels
-            ctx.fillStyle = '#333';
-            ctx.font = 'bold 12px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
+      document.getElementById('hypothesisList').innerHTML = `
+        <li>Cho tam giác ABC</li>
+        <li>AB = ${sides[0].length.toFixed(2)}</li>
+        <li>BC = ${sides[1].length.toFixed(2)}</li>
+        <li>AC = ${sides[2].length.toFixed(2)}</li>
+      `;
 
-            const midAB = { x: (points[0].x + points[1].x) / 2, y: (points[0].y + points[1].y) / 2 - 15 };
-            ctx.fillText(sides[0].length.toFixed(1), midAB.x, midAB.y);
+      document.getElementById('conclusionList').innerHTML = `
+        <li>∠A = ${angles[0].value.toFixed(2)}°</li>
+        <li>∠B = ${angles[1].value.toFixed(2)}°</li>
+        <li>∠C = ${angles[2].value.toFixed(2)}°</li>
+        <li>Loại: ${classify()}</li>
+      `;
+    }
 
-            const midBC = { x: (points[1].x + points[2].x) / 2 + 20, y: (points[1].y + points[2].y) / 2 };
-            ctx.fillText(sides[1].length.toFixed(1), midBC.x, midBC.y);
+    function renderAll() {
+      draw();
+      updateUI();
+    }
 
-            const midAC = { x: (points[0].x + points[2].x) / 2 - 20, y: (points[0].y + points[2].y) / 2 };
-            ctx.fillText(sides[2].length.toFixed(1), midAC.x, midAC.y);
+    // reset
+    window.resetTriangle = function() {
+      points = [
+        { x: canvas.width * 0.25, y: canvas.height * 0.25, id: 'A' },
+        { x: canvas.width * 0.75, y: canvas.height * 0.25, id: 'B' },
+        { x: canvas.width * 0.5, y: canvas.height * 0.75, id: 'C' }
+      ];
+      renderAll();
+    };
 
-            // Draw points
-            points.forEach(point => {
-                ctx.fillStyle = '#667eea';
-                ctx.beginPath();
-                ctx.arc(point.x, point.y, 8, 0, Math.PI * 2);
-                ctx.fill();
+    window.randomTriangle = function() {
+      const pad = 50;
+      points = [
+        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'A' },
+        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'B' },
+        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'C' }
+      ];
+      renderAll();
+    };
 
-                ctx.strokeStyle = '#fff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
+    // events
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+    }
 
-                // Label
-                ctx.fillStyle = '#333';
-                ctx.font = 'bold 14px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'top';
-                ctx.fillText(point.id, point.x, point.y + 18);
-            });
-        }
+    canvas.addEventListener('mousedown', (e) => {
+      const pos = getMousePos(e);
+      const hit = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
+      if (hit) {
+        dragging = hit;
+        canvas.style.cursor = 'grabbing';
+        e.preventDefault();
+      }
+    });
 
-        // Update measurements
-        function updateMeasurements() {
-            const sides = getSides();
-            const angles = getAngles();
+    document.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const pos = getMousePos(e);
+      let x = Math.max(20, Math.min(pos.x, canvas.width - 20));
+      let y = Math.max(20, Math.min(pos.y, canvas.height - 20));
+      dragging.x = x;
+      dragging.y = y;
+      renderAll();
+    });
 
-            // Update classification
-            document.getElementById('classification').textContent = classifyTriangle();
+    document.addEventListener('mouseup', () => {
+      if (dragging) {
+        dragging = null;
+        canvas.style.cursor = 'grab';
+      }
+    });
 
-            // Update sides list
-            const sidesList = document.getElementById('sidesList');
-            sidesList.innerHTML = sides.map(side => `
-                <div class="measurement-item">
-                    <span class="measurement-label">${side.name}</span>
-                    <span class="measurement-value">${side.length.toFixed(2)}</span>
-                </div>
-            `).join('');
+    canvas.addEventListener('mouseenter', () => {
+      canvas.style.cursor = 'grab';
+    });
 
-            // Update angles list
-            const anglesList = document.getElementById('anglesList');
-            const totalAngle = angles.reduce((sum, a) => sum + a.value, 0);
-            anglesList.innerHTML = angles.map(a => `
-                <div class="measurement-item">
-                    <span class="measurement-label">∠${a.vertex}</span>
-                    <span class="measurement-value">${a.value.toFixed(2)}°</span>
-                </div>
-            `).join('') + `
-                <div class="measurement-item angle-total">
-                    <span class="measurement-label">Tổng</span>
-                    <span class="measurement-value">${totalAngle.toFixed(2)}°</span>
-                </div>
-            `;
-
-            // Update hypothesis
-            const hypothesisList = document.getElementById('hypothesisList');
-            hypothesisList.innerHTML = `
-                <li>Cho tam giác ABC</li>
-                <li>AB = ${sides[0].length.toFixed(2)}</li>
-                <li>BC = ${sides[1].length.toFixed(2)}</li>
-                <li>AC = ${sides[2].length.toFixed(2)}</li>
-            `;
-
-            // Update conclusion
-            const conclusionList = document.getElementById('conclusionList');
-            conclusionList.innerHTML = `
-                <li>∠A = ${angles[0].value.toFixed(2)}°</li>
-                <li>∠B = ${angles[1].value.toFixed(2)}°</li>
-                <li>∠C = ${angles[2].value.toFixed(2)}°</li>
-                <li>Loại: ${classifyTriangle()}</li>
-            `;
-        }
-
-        // Reset function
-        function resetTriangle() {
-            initCanvas();
-        }
-
-        // Random triangle function
-        function randomTriangle() {
-            const padding = 50;
-            points = [
-                { x: Math.random() * (canvas.width - padding * 2) + padding, y: Math.random() * (canvas.height - padding * 2) + padding, id: 'A' },
-                { x: Math.random() * (canvas.width - padding * 2) + padding, y: Math.random() * (canvas.height - padding * 2) + padding, id: 'B' },
-                { x: Math.random() * (canvas.width - padding * 2) + padding, y: Math.random() * (canvas.height - padding * 2) + padding, id: 'C' }
-            ];
-            draw();
-            updateMeasurements();
-        }
-
-        // Initial draw
-        window.addEventListener('load', () => {
-            initCanvas();
-        });
-        
-        // Fallback nếu load event không kích hoạt
-        setTimeout(() => {
-            if (points[0].x < 200) {
-                initCanvas();
-            }
-        }, 100);
-    </script>
+    // init
+    window.addEventListener('load', () => {
+      resetTriangle();
+    });
+  })();
+</script>
 </body>
 </html>
