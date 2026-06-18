@@ -432,6 +432,30 @@
       background: white;
     }
 
+    .pdf-options {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+      padding: 10px;
+      background: #f8faff;
+      border: 1px solid #dce2ea;
+    }
+
+    .pdf-options label {
+      font-size: 13px;
+      color: #1f2b3c;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pdf-options input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 16px 14px;
@@ -534,6 +558,25 @@
         <button data-problem="sin" onclick="setProblem('sin')">📐 Định lý sin</button>
         <button data-problem="cos" onclick="setProblem('cos')">📐 Định lý cos</button>
       </div>
+      
+      <div class="pdf-options">
+        <span style="font-weight:600; font-size:13px; color:#1f2b3c;">📄 Hiển thị trên hình vẽ PDF:</span>
+        <label><input type="checkbox" id="pdfShowSides" checked> Cạnh (AB, BC, AC)</label>
+        <label><input type="checkbox" id="pdfShowAngles" checked> Góc (∠A, ∠B, ∠C)</label>
+        <label><input type="checkbox" id="pdfShowLabels" checked> Tên đỉnh (A, B, C)</label>
+      </div>
+      
+      <div class="pdf-options" style="margin-top:4px;">
+        <span style="font-weight:600; font-size:13px; color:#1f2b3c;">📄 Bao gồm trong Đề Bài:</span>
+        <label><input type="checkbox" id="pdfSides" checked> 3 cạnh</label>
+        <label><input type="checkbox" id="pdfAngles" checked> 3 góc</label>
+        <label><input type="checkbox" id="pdfHypothesis" checked> Giả thuyết</label>
+        <label><input type="checkbox" id="pdfConclusion" checked> Kết luận</label>
+        <label><input type="checkbox" id="pdfArea" checked> Diện tích</label>
+        <label><input type="checkbox" id="pdfPerimeter" checked> Chu vi</label>
+        <label><input type="checkbox" id="pdfFormulas" checked> Công thức</label>
+      </div>
+      
       <div class="format-options">
         <label>
           <input type="checkbox" id="roundDecimals" checked>
@@ -554,6 +597,7 @@
           Làm tròn góc (số nguyên)
         </label>
       </div>
+      
       <div class="export-section">
         <button onclick="exportPDF()">📄 Xuất PDF</button>
         <button onclick="exportMarkdown()" class="secondary">📝 Xuất Markdown</button>
@@ -681,11 +725,17 @@
       const a = sides[0].length, b = sides[1].length, c = sides[2].length;
       const A = angles[0].value * Math.PI/180, B = angles[1].value * Math.PI/180, C = angles[2].value * Math.PI/180;
       const area = 0.5 * a * b * Math.sin(C) || 0;
+      const area2 = 0.5 * a * c * Math.sin(B) || 0;
+      const area3 = 0.5 * b * c * Math.sin(A) || 0;
       const p = a + b + c;
       const s = p / 2;
       const heron = Math.sqrt(s * (s-a) * (s-b) * (s-c)) || 0;
       const sinA = Math.sin(A), sinB = Math.sin(B), sinC = Math.sin(C);
-      return { area, chuvi: p, heron, sinA, sinB, sinC, s, a, b, c, A: A*180/Math.PI, B: B*180/Math.PI, C: C*180/Math.PI };
+      return { 
+        area, area2, area3, heron,
+        chuvi: p, sinA, sinB, sinC, s, a, b, c, 
+        A: A*180/Math.PI, B: B*180/Math.PI, C: C*180/Math.PI 
+      };
     }
 
     function draw() {
@@ -728,7 +778,6 @@
       const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
       ctx.fillText(sideLabels[2], midAC.x, midAC.y);
 
-      // Draw angle arcs
       const angles = getAngles();
       const angleLabels = angles.map(a => formatAngle(a.value));
       const radius = 30;
@@ -755,7 +804,6 @@
       ctx.arc(points[2].x, points[2].y, radius, startC, endC);
       ctx.stroke();
 
-      // Draw vertices and angle labels
       points.forEach((p, i) => {
         ctx.fillStyle = '#1f3d6b';
         ctx.beginPath();
@@ -810,8 +858,9 @@
       const f = computeFormulas();
       document.getElementById('formulaDisplay').innerHTML = `
         <div>📐 Chu vi: ${formatNumber(convertLength(f.chuvi, 'm', unit), unitLabel)}</div>
-        <div>📐 Diện tích (Heron): ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</div>
         <div>📐 Diện tích (1/2·ab·sinC): ${formatNumber(convertLength(f.area, 'm2', unit), unitLabel + '²')}</div>
+        <div>📐 Diện tích (1/2·ac·sinB): ${formatNumber(convertLength(f.area2, 'm2', unit), unitLabel + '²')}</div>
+        <div>📐 Diện tích (1/2·bc·sinA): ${formatNumber(convertLength(f.area3, 'm2', unit), unitLabel + '²')}</div>
         <div>📐 sin A = ${formatNumber(f.sinA)}, sin B = ${formatNumber(f.sinB)}, sin C = ${formatNumber(f.sinC)}</div>
         <div>📐 Định lý sin: a/sinA = ${formatNumber(f.a/f.sinA)}, b/sinB = ${formatNumber(f.b/f.sinB)}, c/sinC = ${formatNumber(f.c/f.sinC)}</div>
       `;
@@ -828,7 +877,7 @@
 
       let problemSpecific = '';
       if (currentProblem === 'area') {
-        problemSpecific = `<li>Diện tích: ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</li>`;
+        problemSpecific = `<li>Diện tích: ${formatNumber(convertLength(f.area, 'm2', unit), unitLabel + '²')}</li>`;
       } else if (currentProblem === 'pythagoras') {
         const right = Math.abs(f.A - 90) < 1 || Math.abs(f.B - 90) < 1 || Math.abs(f.C - 90) < 1;
         problemSpecific = `<li>${right ? '✔ Tam giác vuông, thỏa mãn định lý Pythagore' : '✘ Không phải tam giác vuông'}</li>`;
@@ -841,7 +890,7 @@
       document.getElementById('conclusionList').innerHTML = `
         <li>Loại: ${cls.main} (${cls.sub})</li>
         <li>Chu vi: ${formatNumber(convertLength(f.chuvi, 'm', unit), unitLabel)}</li>
-        <li>Diện tích: ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</li>
+        <li>Diện tích: ${formatNumber(convertLength(f.area, 'm2', unit), unitLabel + '²')}</li>
         ${problemSpecific}
         <li>Định lý sin: a/sinA = b/sinB = c/sinC ≈ ${formatNumber(f.a/f.sinA)}</li>
         <li>Định lý cos: a² = b² + c² − 2bc·cosA</li>
@@ -937,11 +986,70 @@
       const data = getExportData();
       const unitFactor = unitFactors[data.unit];
       
+      // Check what to include
+      const includeSides = document.getElementById('pdfSides').checked;
+      const includeAngles = document.getElementById('pdfAngles').checked;
+      const includeHypothesis = document.getElementById('pdfHypothesis').checked;
+      const includeConclusion = document.getElementById('pdfConclusion').checked;
+      const includeArea = document.getElementById('pdfArea').checked;
+      const includePerimeter = document.getElementById('pdfPerimeter').checked;
+      const includeFormulas = document.getElementById('pdfFormulas').checked;
+      
+      // Check what to show on canvas
+      const showSidesOnCanvas = document.getElementById('pdfShowSides').checked;
+      const showAnglesOnCanvas = document.getElementById('pdfShowAngles').checked;
+      const showLabelsOnCanvas = document.getElementById('pdfShowLabels').checked;
+      
       const printWindow = window.open('', '_blank', 'width=900,height=700');
+      
+      let hypothesisHTML = '';
+      if (includeHypothesis) {
+        hypothesisHTML = `
+          <div class="info" style="margin-top:15px;">
+            <h3 style="margin-top:0; color:#3865a0;">📋 Giả thuyết</h3>
+            <div>Cho tam giác ABC</div>
+            ${includeSides ? `<div>AB = ${formatExport(convertLength(data.sides[0].length, 'm', data.unit), data.unitLabel)}</div>` : ''}
+            ${includeSides ? `<div>BC = ${formatExport(convertLength(data.sides[1].length, 'm', data.unit), data.unitLabel)}</div>` : ''}
+            ${includeSides ? `<div>AC = ${formatExport(convertLength(data.sides[2].length, 'm', data.unit), data.unitLabel)}</div>` : ''}
+            ${includeAngles ? `<div>∠A = ${formatAngle(data.angles[0].value)}</div>` : ''}
+            ${includeAngles ? `<div>∠B = ${formatAngle(data.angles[1].value)}</div>` : ''}
+            ${includeAngles ? `<div>∠C = ${formatAngle(data.angles[2].value)}</div>` : ''}
+          </div>
+        `;
+      }
+      
+      let conclusionHTML = '';
+      if (includeConclusion) {
+        conclusionHTML = `
+          <div class="info" style="margin-top:15px; background:#f0f8f0;">
+            <h3 style="margin-top:0; color:#1e7b4c;">✓ Kết luận</h3>
+            <div>Loại: ${data.cls.main} (${data.cls.sub})</div>
+            ${includePerimeter ? `<div>Chu vi: ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}</div>` : ''}
+            ${includeArea ? `<div>Diện tích: ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}</div>` : ''}
+            <div>Định lý sin: a/sinA = b/sinB = c/sinC ≈ ${formatExport(data.f.a/data.f.sinA)}</div>
+            <div>Pythagore: ${(Math.abs(data.f.A-90)<1||Math.abs(data.f.B-90)<1||Math.abs(data.f.C-90)<1) ? '✔ Thỏa mãn' : '—'}</div>
+          </div>
+        `;
+      }
+      
+      let formulasHTML = '';
+      if (includeFormulas) {
+        formulasHTML = `
+          <div class="info" style="margin-top:15px;">
+            <h3 style="margin-top:0;">📐 Công thức & Định lý</h3>
+            <div>sin A = ${formatExport(data.f.sinA)}, sin B = ${formatExport(data.f.sinB)}, sin C = ${formatExport(data.f.sinC)}</div>
+            <div>a/sinA = ${formatExport(data.f.a/data.f.sinA)}, b/sinB = ${formatExport(data.f.b/data.f.sinB)}, c/sinC = ${formatExport(data.f.c/data.f.sinC)}</div>
+            <div>a² = ${formatExport(data.f.a*data.f.a)}, b² = ${formatExport(data.f.b*data.f.b)}, c² = ${formatExport(data.f.c*data.f.c)}</div>
+            ${includeArea ? `<div>Diện tích (1/2·ab·sinC) = ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}</div>` : ''}
+            <div>Định lý cos: a² = b² + c² − 2bc·cosA</div>
+          </div>
+        `;
+      }
+      
       const content = `
         <html>
         <head>
-          <title>Tam giác</title>
+          <title>Đề Bài tam giác</title>
           <style>
             body { font-family: 'Inter', Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
             h1 { color: #1f3d6b; border-bottom: 2px solid #dce2ea; padding-bottom: 10px; }
@@ -949,21 +1057,20 @@
             .col { flex: 1; min-width: 300px; }
             .info { background: #f8faff; padding: 15px; border: 1px solid #dce2ea; margin: 10px 0; }
             .label { font-weight: 600; color: #445566; }
-            .value { font-weight: 500; color: #0b1f33; }
-            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
-            td { padding: 8px 12px; border-bottom: 1px solid #edf2f7; }
-            th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #d5dee9; }
             .badge { background: #f0f6fe; padding: 4px 14px; border: 1px solid #d3def0; display: inline-block; }
             canvas { border: 1px solid #dce2ea; margin: 20px 0; max-width: 100%; }
             .footer { margin-top: 30px; font-size: 12px; color: #8899aa; border-top: 1px solid #dce2ea; padding-top: 15px; }
-            .angle-label { font-weight: 600; display: inline-block; margin-right: 8px; }
             .angle-A { color: #c0392b; }
             .angle-B { color: #2980b9; }
             .angle-C { color: #27ae60; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            td { padding: 8px 12px; border-bottom: 1px solid #edf2f7; }
+            th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #d5dee9; }
+            .info h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
           </style>
         </head>
         <body>
-          <h1>📐 Tam giác ABC</h1>
+          <h1>📐 Đề bài tam giác ABC</h1>
           
           <div class="grid">
             <div class="col">
@@ -972,38 +1079,39 @@
                 <div style="margin-top:6px;"><span class="label">Chi tiết:</span> ${data.cls.sub}</div>
               </div>
               
+              ${includeSides ? `
               <table>
                 <tr><th>Cạnh</th><th style="text-align:right;">Giá trị (${data.unitLabel})</th></tr>
                 ${data.sides.map(s => `<tr><td>${s.name}</td><td style="text-align:right;">${formatExport(convertLength(s.length, 'm', data.unit), data.unitLabel)}</td></tr>`).join('')}
               </table>
+              ` : ''}
               
+              ${includeAngles ? `
               <table>
                 <tr><th>Góc</th><th style="text-align:right;">Giá trị</th></tr>
                 ${data.angles.map(a => `<tr><td><span class="angle-label angle-${a.vertex}">∠${a.vertex}</span></td><td style="text-align:right;">${formatAngle(a.value)}</td></tr>`).join('')}
                 <tr style="border-top:2px solid #d5dee9; font-weight:600;"><td>Tổng</td><td style="text-align:right;">${formatAngle(data.angles.reduce((s,a) => s + a.value, 0))}</td></tr>
               </table>
+              ` : ''}
               
+              ${includePerimeter || includeArea ? `
               <div class="info">
-                <div><span class="label">Chu vi:</span> ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}</div>
-                <div><span class="label">Diện tích (Heron):</span> ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}</div>
-                <div><span class="label">Diện tích (1/2·ab·sinC):</span> ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}</div>
+                ${includePerimeter ? `<div><span class="label">Chu vi:</span> ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}</div>` : ''}
+                ${includeArea ? `<div><span class="label">Diện tích:</span> ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}</div>` : ''}
               </div>
+              ` : ''}
+              
+              ${hypothesisHTML}
+              ${conclusionHTML}
+              ${formulasHTML}
             </div>
             
             <div class="col">
               <canvas id="printCanvas" width="600" height="400"></canvas>
               <div style="text-align:center; font-size:12px; color:#666; margin-top:5px;">
-                <span class="angle-A">● ∠A</span> <span class="angle-B">● ∠B</span> <span class="angle-C">● ∠C</span>
+                ${showAnglesOnCanvas ? '<span class="angle-A">● ∠A</span> <span class="angle-B">● ∠B</span> <span class="angle-C">● ∠C</span>' : ''}
               </div>
             </div>
-          </div>
-          
-          <div class="info" style="margin-top:20px;">
-            <h3 style="margin-top:0;">📐 Công thức & Định lý</h3>
-            <div>sin A = ${formatExport(data.f.sinA)}, sin B = ${formatExport(data.f.sinB)}, sin C = ${formatExport(data.f.sinC)}</div>
-            <div>a/sinA = ${formatExport(data.f.a/data.f.sinA)}, b/sinB = ${formatExport(data.f.b/data.f.sinB)}, c/sinC = ${formatExport(data.f.c/data.f.sinC)}</div>
-            <div>a² = ${formatExport(data.f.a*data.f.a)}, b² = ${formatExport(data.f.b*data.f.b)}, c² = ${formatExport(data.f.c*data.f.c)}</div>
-            <div>Pythagore: ${(Math.abs(data.f.A-90)<1||Math.abs(data.f.B-90)<1||Math.abs(data.f.C-90)<1) ? '✔ Thỏa mãn' : '—'}</div>
           </div>
           
           <div class="footer">Xuất từ công cụ tam giác · ${new Date().toLocaleString()}</div>
@@ -1012,6 +1120,9 @@
             const c = document.getElementById('printCanvas');
             const ctx = c.getContext('2d');
             const points = ${JSON.stringify(points)};
+            const showSides = ${showSidesOnCanvas};
+            const showAngles = ${showAnglesOnCanvas};
+            const showLabels = ${showLabelsOnCanvas};
             
             function dist(p1, p2) { return Math.hypot(p2.x - p1.x, p2.y - p1.y); }
             function angleDeg(p1, p2, p3) {
@@ -1064,20 +1175,25 @@
               ctx.fillStyle = '#1a2d47';
               ctx.font = '500 13px Inter, sans-serif';
               ctx.textAlign = 'center';
-              ctx.textBaseline = 'bottom';
               
-              const labels = sides.map(s => {
-                const val = s.length * unitFactor;
-                return formatNum(val) + ' ' + unitLabel;
-              });
-              
-              const midAB = { x: (points[0].x+points[1].x)/2, y: (points[0].y+points[1].y)/2 - 14 };
-              ctx.fillText(labels[0], midAB.x, midAB.y);
-              const midBC = { x: (points[1].x+points[2].x)/2 + 18, y: (points[1].y+points[2].y)/2 + 4 };
-              ctx.textBaseline = 'middle';
-              ctx.fillText(labels[1], midBC.x, midBC.y);
-              const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
-              ctx.fillText(labels[2], midAC.x, midAC.y);
+              // Draw side labels
+              if (showSides) {
+                const labels = sides.map(s => {
+                  const val = s.length * unitFactor;
+                  return formatNum(val) + ' ' + unitLabel;
+                });
+                
+                ctx.textBaseline = 'bottom';
+                const midAB = { x: (points[0].x+points[1].x)/2, y: (points[0].y+points[1].y)/2 - 14 };
+                ctx.fillText(labels[0], midAB.x, midAB.y);
+                
+                ctx.textBaseline = 'middle';
+                const midBC = { x: (points[1].x+points[2].x)/2 + 18, y: (points[1].y+points[2].y)/2 + 4 };
+                ctx.fillText(labels[1], midBC.x, midBC.y);
+                
+                const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
+                ctx.fillText(labels[2], midAC.x, midAC.y);
+              }
               
               // Draw angle arcs
               const radius = 30;
@@ -1104,10 +1220,9 @@
               ctx.arc(points[2].x, points[2].y, radius, startC, endC);
               ctx.stroke();
               
-              // Angle labels
-              const angleLabels = angles.map(a => formatAngle(a.value));
-              
+              // Draw vertices with labels and angles
               points.forEach((p, i) => {
+                // Draw vertex circle
                 ctx.fillStyle = '#1f3d6b';
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI);
@@ -1115,21 +1230,28 @@
                 ctx.strokeStyle = 'white';
                 ctx.lineWidth = 2;
                 ctx.stroke();
-                ctx.fillStyle = '#0b1d32';
-                ctx.font = 'bold 14px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'bottom';
-                ctx.fillText(p.id, p.x, p.y - 12);
                 
-                ctx.fillStyle = ['#c0392b', '#2980b9', '#27ae60'][i];
-                ctx.font = '12px Inter, sans-serif';
-                ctx.textBaseline = 'bottom';
-                const anglePos = {
-                  0: { x: p.x + 45 * Math.cos((startA + endA)/2), y: p.y + 45 * Math.sin((startA + endA)/2) },
-                  1: { x: p.x + 45 * Math.cos((startB + endB)/2), y: p.y + 45 * Math.sin((startB + endB)/2) },
-                  2: { x: p.x + 45 * Math.cos((startC + endC)/2), y: p.y + 45 * Math.sin((startC + endC)/2) }
-                };
-                ctx.fillText(angleLabels[i], anglePos[i].x, anglePos[i].y);
+                // Draw vertex label
+                if (showLabels) {
+                  ctx.fillStyle = '#0b1d32';
+                  ctx.font = 'bold 14px Inter, sans-serif';
+                  ctx.textAlign = 'center';
+                  ctx.textBaseline = 'bottom';
+                  ctx.fillText(p.id, p.x, p.y - 12);
+                }
+                
+                // Draw angle label
+                if (showAngles) {
+                  ctx.fillStyle = ['#c0392b', '#2980b9', '#27ae60'][i];
+                  ctx.font = '12px Inter, sans-serif';
+                  ctx.textBaseline = 'bottom';
+                  const anglePos = {
+                    0: { x: p.x + 45 * Math.cos((startA + endA)/2), y: p.y + 45 * Math.sin((startA + endA)/2) },
+                    1: { x: p.x + 45 * Math.cos((startB + endB)/2), y: p.y + 45 * Math.sin((startB + endB)/2) },
+                    2: { x: p.x + 45 * Math.cos((startC + endC)/2), y: p.y + 45 * Math.sin((startC + endC)/2) }
+                  };
+                  ctx.fillText(formatAngle(angles[i].value), anglePos[i].x, anglePos[i].y);
+                }
               });
             }
             drawPrint();
@@ -1156,7 +1278,7 @@
 - **Cạnh (${data.unitLabel})**: AB = ${formatExport(convertLength(data.sides[0].length, 'm', data.unit), data.unitLabel)}, BC = ${formatExport(convertLength(data.sides[1].length, 'm', data.unit), data.unitLabel)}, AC = ${formatExport(convertLength(data.sides[2].length, 'm', data.unit), data.unitLabel)}
 - **Góc**: ∠A = ${formatAngle(data.angles[0].value)}, ∠B = ${formatAngle(data.angles[1].value)}, ∠C = ${formatAngle(data.angles[2].value)}
 - **Chu vi**: ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}
-- **Diện tích (Heron)**: ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}
+- **Diện tích**: ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}
 - **Định lý sin**: a/sinA = ${formatExport(data.f.a/data.f.sinA)}
       `;
       const blob = new Blob([md], {type: 'text/markdown'});
@@ -1180,13 +1302,13 @@ AC = ${formatExport(convertLength(data.sides[2].length, 'm', data.unit), data.un
 
 Yêu cầu:
 1. Tính chu vi tam giác.
-2. Tính diện tích tam giác (công thức Heron).
+2. Tính diện tích tam giác.
 3. Xác định loại tam giác.
 4. Áp dụng định lý sin, tính tỉ số a/sinA.
 
 Đáp án:
 Chu vi = ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}
-Diện tích = ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}
+Diện tích = ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}
 Loại = ${data.cls.main}
 a/sinA = ${formatExport(data.f.a/data.f.sinA)}
       `;
@@ -1198,7 +1320,6 @@ a/sinA = ${formatExport(data.f.a/data.f.sinA)}
     };
 
     window.printCanvas = function() {
-      const wrapper = document.getElementById('canvasWrapper');
       const printWindow = window.open('', '_blank', 'width=800,height=600');
       printWindow.document.write(`
         <html><head><title>Hình tam giác</title>
@@ -1306,7 +1427,7 @@ a/sinA = ${formatExport(data.f.a/data.f.sinA)}
             ctx.arc(points[2].x, points[2].y, radius, startC, endC);
             ctx.stroke();
             
-            // Vertices with angle labels
+            // Vertices
             points.forEach((p, i) => {
               ctx.fillStyle = '#1f3d6b';
               ctx.beginPath();
@@ -1332,7 +1453,6 @@ a/sinA = ${formatExport(data.f.a/data.f.sinA)}
               ctx.fillText(formatAngle(angles[i].value), anglePos[i].x, anglePos[i].y);
             });
             
-            // Info display with 3 angles clearly shown
             const info = document.getElementById('infoDisplay');
             const total = angles.reduce((s,a) => s + a.value, 0);
             info.innerHTML = \`
