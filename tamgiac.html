@@ -12,7 +12,7 @@
     }
 
     body {
-      background: #ffffff;
+      background: #f4f7fc;
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
       display: flex;
@@ -23,10 +23,10 @@
 
     .container {
       width: 100%;
-      max-width: 1400px;
+      max-width: 1600px;
       background: white;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
-      border: 1px solid #eaeef2;
+      border: 1px solid #dce2ea;
       padding: 28px 32px 32px 32px;
     }
 
@@ -58,13 +58,27 @@
       font-size: 22px;
     }
 
-    .header p {
-      font-size: 14px;
-      color: #5a6d7e;
-      font-weight: 450;
-      background: #f5f8fb;
-      padding: 6px 14px;
-      border: 1px solid #e2e8f0;
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .header-actions button {
+      background: white;
+      border: 1px solid #d0d8e2;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #1f2a3a;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: #fafcff;
+    }
+
+    .header-actions button:hover {
+      background: #edf2f9;
+      border-color: #a5b6cc;
     }
 
     .main-grid {
@@ -81,7 +95,6 @@
       }
     }
 
-    /* Canvas block — vuông vức, không bo tròn */
     .canvas-wrapper {
       background: #ffffff;
       border: 1px solid #dce2ea;
@@ -131,7 +144,6 @@
       color: #1f2a3a;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s;
-      letter-spacing: 0.01em;
       background: #fafcff;
     }
 
@@ -140,23 +152,16 @@
       border-color: #a5b6cc;
     }
 
-    .canvas-actions button:active {
-      background: #e0e7f0;
-      transform: scale(0.98);
-    }
-
     .tip {
       font-size: 12px;
       color: #6c7e91;
       background: #f6f9fd;
       padding: 8px 12px;
       margin-top: 12px;
-      border-left: 3px solid #8a9cb0;
+      border-left: 4px solid #8a9cb0;
       border: 1px solid #e2e9f2;
-      border-left-width: 4px;
     }
 
-    /* Info panel — thẳng, không bo tròn */
     .info-panel {
       display: flex;
       flex-direction: column;
@@ -230,28 +235,32 @@
       color: #1d4a7a;
     }
 
-    /* Footer giả thuyết – kết luận, vuông vức */
     .footer-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 28px;
       margin-top: 8px;
     }
 
-    @media (max-width: 780px) {
+    @media (max-width: 1024px) {
       .footer-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+        grid-template-columns: 1fr 1fr;
       }
     }
 
-    .hypothesis-card, .conclusion-card {
+    @media (max-width: 680px) {
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hypothesis-card, .conclusion-card, .editor-card {
       background: #fbfdff;
       border: 1px solid #dce2ea;
       padding: 16px 18px 18px 18px;
     }
 
-    .hypothesis-card h3, .conclusion-card h3 {
+    .hypothesis-card h3, .conclusion-card h3, .editor-card h3 {
       font-size: 14px;
       font-weight: 600;
       color: #1f2b3c;
@@ -294,7 +303,135 @@
       font-weight: 600;
     }
 
-    /* tweaks cho responsive */
+    .editor-card input, .editor-card select {
+      padding: 6px 8px;
+      border: 1px solid #d0d8e2;
+      font-size: 13px;
+      background: white;
+      margin-right: 8px;
+    }
+
+    .editor-card input { width: 80px; }
+    .editor-card select { width: 100px; }
+
+    .editor-card .row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .editor-card .row label {
+      min-width: 30px;
+      font-weight: 500;
+      color: #1f2b3c;
+    }
+
+    .editor-card button {
+      background: white;
+      border: 1px solid #d0d8e2;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-top: 4px;
+    }
+
+    .editor-card button:hover {
+      background: #edf2f9;
+      border-color: #a5b6cc;
+    }
+
+    .editor-card .editor-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .export-section {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .export-section button {
+      background: #1f3d6b;
+      border: none;
+      color: white;
+      padding: 8px 22px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .export-section button:hover {
+      background: #143157;
+    }
+
+    .export-section button.secondary {
+      background: #2d4a72;
+    }
+
+    .problem-selector {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .problem-selector button {
+      background: #eef2f6;
+      border: 1px solid #d0d8e2;
+      padding: 6px 16px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .problem-selector button:hover {
+      background: #dce4ed;
+    }
+
+    .problem-selector button.active {
+      background: #1f3d6b;
+      color: white;
+      border-color: #1f3d6b;
+    }
+
+    .format-options {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .format-options label {
+      font-size: 13px;
+      color: #1f2b3c;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .format-options input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    .format-options select {
+      padding: 4px 8px;
+      border: 1px solid #d0d8e2;
+      font-size: 13px;
+      background: white;
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 16px 14px;
@@ -312,28 +449,24 @@
 <div class="container">
   <div class="header">
     <h1><span>△</span> Chứng minh tam giác</h1>
-    <p>Kéo A, B, C · số liệu tự động</p>
+    <div class="header-actions">
+      <button onclick="resetTriangle()">↻ Đặt lại</button>
+      <button onclick="randomTriangle()">🎲 Ngẫu nhiên</button>
+    </div>
   </div>
 
   <div class="main-grid">
-    <!-- Canvas -->
-    <div class="canvas-wrapper">
+    <div class="canvas-wrapper" id="canvasWrapper">
       <h2>📐 Vẽ tam giác</h2>
       <canvas id="triangleCanvas" width="600" height="400"></canvas>
-      <div class="canvas-actions">
-        <button onclick="resetTriangle()">↻ Đặt lại</button>
-        <button onclick="randomTriangle()">🎲 Ngẫu nhiên</button>
-      </div>
-      <div class="tip">
-        💡 Kéo các điểm đỉnh để thay đổi hình dạng
-      </div>
+      <div class="tip">💡 Kéo các điểm đỉnh · số liệu tự động</div>
     </div>
 
-    <!-- Info -->
     <div class="info-panel">
       <div class="card">
         <h3>📊 Phân loại</h3>
         <div class="classification-badge" id="classification">Tam giác thường</div>
+        <div style="margin-top: 8px; font-size: 13px; color: #2c405a;" id="subClassification"></div>
       </div>
 
       <div class="card">
@@ -345,10 +478,14 @@
         <h3>∠ Góc</h3>
         <div class="measurement-list" id="anglesList"></div>
       </div>
+
+      <div class="card">
+        <h3>📐 Định lý & công thức</h3>
+        <div id="formulaDisplay" style="font-size: 13px; color: #1f2f42; line-height: 1.7;"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Footer: giả thuyết + kết luận -->
   <div class="footer-grid">
     <div class="hypothesis-card">
       <h3>📋 Giả thuyết</h3>
@@ -358,6 +495,72 @@
       <h3>✓ Kết luận</h3>
       <ul id="conclusionList"></ul>
     </div>
+    <div class="editor-card">
+      <h3>✏️ Editor · Nhập số đo</h3>
+      <div class="row"><label>A:</label><input type="number" id="inputA" step="0.1" value="0"> °</div>
+      <div class="row"><label>B:</label><input type="number" id="inputB" step="0.1" value="0"> °</div>
+      <div class="row"><label>C:</label><input type="number" id="inputC" step="0.1" value="0"> °</div>
+      <div class="row"><label>AB:</label><input type="number" id="inputAB" step="0.1" value="0"></div>
+      <div class="row"><label>BC:</label><input type="number" id="inputBC" step="0.1" value="0"></div>
+      <div class="row"><label>AC:</label><input type="number" id="inputAC" step="0.1" value="0"></div>
+      <div class="row">
+        <label>Đơn vị:</label>
+        <select id="unitSelect">
+          <option value="nm">Nanomet (nm)</option>
+          <option value="micromet">Micromet (µm)</option>
+          <option value="mm">Milimet (mm)</option>
+          <option value="cm">Centimet (cm)</option>
+          <option value="dm">Decimet (dm)</option>
+          <option value="m" selected>Mét (m)</option>
+          <option value="km">Kilomet (km)</option>
+          <option value="saoBac">Sào Bắc Bộ</option>
+          <option value="saoNam">Sào Nam Bộ</option>
+        </select>
+      </div>
+      <div class="editor-actions">
+        <button onclick="applyEditor()">Áp dụng</button>
+        <button onclick="clearEditor()">Xóa</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-grid" style="margin-top: 16px;">
+    <div class="card" style="grid-column: 1 / -1;">
+      <h3>🧾 Bài toán & Xuất</h3>
+      <div class="problem-selector">
+        <button class="active" data-problem="general" onclick="setProblem('general')">📐 Tổng quát</button>
+        <button data-problem="area" onclick="setProblem('area')">📐 Diện tích</button>
+        <button data-problem="pythagoras" onclick="setProblem('pythagoras')">📐 Pythagore</button>
+        <button data-problem="sin" onclick="setProblem('sin')">📐 Định lý sin</button>
+        <button data-problem="cos" onclick="setProblem('cos')">📐 Định lý cos</button>
+      </div>
+      <div class="format-options">
+        <label>
+          <input type="checkbox" id="roundDecimals" checked>
+          Làm tròn số thập phân (2 chữ số)
+        </label>
+        <label>
+          Số chữ số thập phân:
+          <select id="decimalPlaces">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </label>
+        <label>
+          <input type="checkbox" id="roundAngles" checked>
+          Làm tròn góc (số nguyên)
+        </label>
+      </div>
+      <div class="export-section">
+        <button onclick="exportPDF()">📄 Xuất PDF</button>
+        <button onclick="exportMarkdown()" class="secondary">📝 Xuất Markdown</button>
+        <button onclick="exportExam()" class="secondary">📋 Đề thi mẫu</button>
+        <button onclick="printCanvas()" class="secondary">🖨️ In hình tam giác</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -366,24 +569,68 @@
     const canvas = document.getElementById('triangleCanvas');
     const ctx = canvas.getContext('2d');
 
-    // state
     let points = [
       { x: 150, y: 100, id: 'A' },
       { x: 450, y: 100, id: 'B' },
       { x: 300, y: 300, id: 'C' }
     ];
     let dragging = null;
+    let currentUnit = 'm';
+    let currentProblem = 'general';
 
-    // helpers
-    function dist(p1, p2) {
-      return Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    const unitFactors = {
+      'nm': 1e-9, 'micromet': 1e-6, 'mm': 0.001, 'cm': 0.01, 'dm': 0.1,
+      'm': 1, 'km': 1000, 'saoBac': 360, 'saoNam': 1296
+    };
+
+    function getUnitLabel(unit) {
+      const labels = {
+        'nm': 'nm', 'micromet': 'µm', 'mm': 'mm', 'cm': 'cm', 'dm': 'dm',
+        'm': 'm', 'km': 'km', 'saoBac': 'sào BB', 'saoNam': 'sào NB'
+      };
+      return labels[unit] || unit;
     }
 
+    function convertLength(value, fromUnit, toUnit) {
+      const meters = value * unitFactors[fromUnit];
+      return meters / unitFactors[toUnit];
+    }
+
+    function getDisplayUnit() {
+      return document.getElementById('unitSelect').value;
+    }
+
+    function getDecimalPlaces() {
+      if (document.getElementById('roundDecimals').checked) {
+        return parseInt(document.getElementById('decimalPlaces').value);
+      }
+      return null;
+    }
+
+    function formatNumber(value, unit = '') {
+      const places = getDecimalPlaces();
+      if (places !== null) {
+        return value.toFixed(places) + (unit ? ' ' + unit : '');
+      }
+      return value.toString() + (unit ? ' ' + unit : '');
+    }
+
+    function formatAngle(value, unit = '°') {
+      if (document.getElementById('roundAngles').checked) {
+        return Math.round(value) + unit;
+      }
+      const places = getDecimalPlaces();
+      if (places !== null) {
+        return value.toFixed(places) + unit;
+      }
+      return value.toString() + unit;
+    }
+
+    function dist(p1, p2) { return Math.hypot(p2.x - p1.x, p2.y - p1.y); }
+
     function angleDeg(p1, p2, p3) {
-      const a = dist(p2, p3);
-      const b = dist(p1, p3);
-      const c = dist(p1, p2);
-      const cosC = (a * a + b * b - c * c) / (2 * a * b);
+      const a = dist(p2, p3), b = dist(p1, p3), c = dist(p1, p2);
+      const cosC = (a*a + b*b - c*c) / (2*a*b);
       const clamped = Math.max(-1, Math.min(1, cosC));
       return (Math.acos(clamped) * 180) / Math.PI;
     }
@@ -404,44 +651,54 @@
       ];
     }
 
-    function classify() {
+    function classifyDetailed() {
       const sides = getSides();
-      const sorted = [...sides].sort((a, b) => a.length - b.length);
+      const sorted = [...sides].sort((a,b) => a.length - b.length);
       const a = sorted[0].length, b = sorted[1].length, c = sorted[2].length;
-
-      const isRight = Math.abs(a * a + b * b - c * c) < 5;
+      const angles = getAngles();
+      const A = angles[0].value, B = angles[1].value, C = angles[2].value;
+      
+      let main = '', sub = '';
       const eq = Math.abs(a - b) < 0.1 && Math.abs(b - c) < 0.1;
       const iso = Math.abs(a - b) < 1 || Math.abs(b - c) < 1 || Math.abs(a - c) < 1;
+      const right = Math.abs(A - 90) < 1 || Math.abs(B - 90) < 1 || Math.abs(C - 90) < 1;
+      const obtuse = A > 90 || B > 90 || C > 90;
+      const acute = !right && !obtuse;
 
-      if (eq) return 'Tam giác đều';
-      if (isRight) return 'Tam giác vuông';
-      if (iso) return 'Tam giác cân';
-      return 'Tam giác thường';
+      if (eq) { main = 'Tam giác đều'; sub = 'Cạnh bằng nhau, góc 60°'; }
+      else if (right && iso) { main = 'Tam giác vuông cân'; sub = 'Góc 90°, hai cạnh góc vuông bằng nhau'; }
+      else if (right) { main = 'Tam giác vuông'; sub = 'Có một góc 90°'; }
+      else if (iso) { main = 'Tam giác cân'; sub = 'Hai cạnh bên bằng nhau'; }
+      else if (obtuse) { main = 'Tam giác tù'; sub = 'Có một góc lớn hơn 90°'; }
+      else if (acute) { main = 'Tam giác nhọn'; sub = 'Cả ba góc đều nhỏ hơn 90°'; }
+      else { main = 'Tam giác thường'; sub = 'Không có tính chất đặc biệt'; }
+      return { main, sub };
     }
 
-    // draw
+    function computeFormulas() {
+      const sides = getSides();
+      const angles = getAngles();
+      const a = sides[0].length, b = sides[1].length, c = sides[2].length;
+      const A = angles[0].value * Math.PI/180, B = angles[1].value * Math.PI/180, C = angles[2].value * Math.PI/180;
+      const area = 0.5 * a * b * Math.sin(C) || 0;
+      const p = a + b + c;
+      const s = p / 2;
+      const heron = Math.sqrt(s * (s-a) * (s-b) * (s-c)) || 0;
+      const sinA = Math.sin(A), sinB = Math.sin(B), sinC = Math.sin(C);
+      return { area, chuvi: p, heron, sinA, sinB, sinC, s, a, b, c, A: A*180/Math.PI, B: B*180/Math.PI, C: C*180/Math.PI };
+    }
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // grid nhẹ
       ctx.strokeStyle = '#e9edf4';
       ctx.lineWidth = 0.6;
-      for (let i = 0; i < canvas.width; i += 50) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvas.height);
-        ctx.stroke();
-      }
-      for (let i = 0; i < canvas.height; i += 50) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(canvas.width, i);
-        ctx.stroke();
-      }
+      for (let i = 0; i < canvas.width; i += 50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,canvas.height); ctx.stroke(); }
+      for (let i = 0; i < canvas.height; i += 50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(canvas.width,i); ctx.stroke(); }
 
       const sides = getSides();
-
-      // vẽ tam giác
+      const unit = getDisplayUnit();
+      const unitLabel = getUnitLabel(unit);
+      
       ctx.strokeStyle = '#1f3d6b';
       ctx.lineWidth = 2.4;
       ctx.beginPath();
@@ -451,24 +708,55 @@
       ctx.closePath();
       ctx.stroke();
 
-      // cạnh
       ctx.fillStyle = '#1a2d47';
       ctx.font = '500 13px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'bottom';
+      
+      const sideLabels = sides.map(s => {
+        const val = convertLength(s.length, 'm', unit);
+        return formatNumber(val, unitLabel);
+      });
 
-      const midAB = { x: (points[0].x + points[1].x)/2, y: (points[0].y + points[1].y)/2 - 14 };
-      ctx.fillText(sides[0].length.toFixed(1), midAB.x, midAB.y);
-
-      const midBC = { x: (points[1].x + points[2].x)/2 + 18, y: (points[1].y + points[2].y)/2 + 4 };
+      const midAB = { x: (points[0].x+points[1].x)/2, y: (points[0].y+points[1].y)/2 - 14 };
+      ctx.fillText(sideLabels[0], midAB.x, midAB.y);
+      
+      const midBC = { x: (points[1].x+points[2].x)/2 + 18, y: (points[1].y+points[2].y)/2 + 4 };
       ctx.textBaseline = 'middle';
-      ctx.fillText(sides[1].length.toFixed(1), midBC.x, midBC.y);
+      ctx.fillText(sideLabels[1], midBC.x, midBC.y);
+      
+      const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
+      ctx.fillText(sideLabels[2], midAC.x, midAC.y);
 
-      const midAC = { x: (points[0].x + points[2].x)/2 - 18, y: (points[0].y + points[2].y)/2 + 4 };
-      ctx.fillText(sides[2].length.toFixed(1), midAC.x, midAC.y);
+      // Draw angle arcs
+      const angles = getAngles();
+      const angleLabels = angles.map(a => formatAngle(a.value));
+      const radius = 30;
+      
+      ctx.strokeStyle = '#c0392b';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      const startA = Math.atan2(points[1].y - points[0].y, points[1].x - points[0].x);
+      const endA = Math.atan2(points[2].y - points[0].y, points[2].x - points[0].x);
+      ctx.arc(points[0].x, points[0].y, radius, startA, endA);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#2980b9';
+      ctx.beginPath();
+      const startB = Math.atan2(points[0].y - points[1].y, points[0].x - points[1].x);
+      const endB = Math.atan2(points[2].y - points[1].y, points[2].x - points[1].x);
+      ctx.arc(points[1].x, points[1].y, radius, startB, endB);
+      ctx.stroke();
+      
+      ctx.strokeStyle = '#27ae60';
+      ctx.beginPath();
+      const startC = Math.atan2(points[1].y - points[2].y, points[1].x - points[2].x);
+      const endC = Math.atan2(points[0].y - points[2].y, points[0].x - points[2].x);
+      ctx.arc(points[2].x, points[2].y, radius, startC, endC);
+      ctx.stroke();
 
-      // đỉnh
-      points.forEach(p => {
+      // Draw vertices and angle labels
+      points.forEach((p, i) => {
         ctx.fillStyle = '#1f3d6b';
         ctx.beginPath();
         ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI);
@@ -482,79 +770,583 @@
         ctx.textAlign = 'center';
         ctx.textBaseline = 'bottom';
         ctx.fillText(p.id, p.x, p.y - 12);
+        
+        ctx.fillStyle = ['#c0392b', '#2980b9', '#27ae60'][i];
+        ctx.font = '12px Inter, sans-serif';
+        ctx.textBaseline = 'bottom';
+        const anglePos = {
+          0: { x: p.x + 45 * Math.cos((startA + endA)/2), y: p.y + 45 * Math.sin((startA + endA)/2) },
+          1: { x: p.x + 45 * Math.cos((startB + endB)/2), y: p.y + 45 * Math.sin((startB + endB)/2) },
+          2: { x: p.x + 45 * Math.cos((startC + endC)/2), y: p.y + 45 * Math.sin((startC + endC)/2) }
+        };
+        ctx.fillText(angleLabels[i], anglePos[i].x, anglePos[i].y);
       });
     }
 
-    // update bảng
     function updateUI() {
       const sides = getSides();
       const angles = getAngles();
-
-      document.getElementById('classification').textContent = classify();
+      const cls = classifyDetailed();
+      const unit = getDisplayUnit();
+      const unitLabel = getUnitLabel(unit);
+      
+      document.getElementById('classification').textContent = cls.main;
+      document.getElementById('subClassification').textContent = cls.sub;
 
       const sidesList = document.getElementById('sidesList');
-      sidesList.innerHTML = sides.map(s => `
-        <div class="measurement-item">
-          <span class="measurement-label">${s.name}</span>
-          <span class="measurement-value">${s.length.toFixed(2)}</span>
-        </div>
-      `).join('');
+      sidesList.innerHTML = sides.map(s => {
+        const val = convertLength(s.length, 'm', unit);
+        return `<div class="measurement-item"><span class="measurement-label">${s.name}</span><span class="measurement-value">${formatNumber(val, unitLabel)}</span></div>`;
+      }).join('');
 
       const anglesList = document.getElementById('anglesList');
       const total = angles.reduce((sum, a) => sum + a.value, 0);
       anglesList.innerHTML = angles.map(a => `
-        <div class="measurement-item">
-          <span class="measurement-label">∠${a.vertex}</span>
-          <span class="measurement-value">${a.value.toFixed(2)}°</span>
-        </div>
+        <div class="measurement-item"><span class="measurement-label">∠${a.vertex}</span><span class="measurement-value">${formatAngle(a.value)}</span></div>
       `).join('') + `
-        <div class="measurement-item angle-total">
-          <span class="measurement-label">Tổng</span>
-          <span class="measurement-value">${total.toFixed(2)}°</span>
-        </div>
+        <div class="measurement-item angle-total"><span class="measurement-label">Tổng</span><span class="measurement-value">${formatAngle(total)}</span></div>
+      `;
+
+      const f = computeFormulas();
+      document.getElementById('formulaDisplay').innerHTML = `
+        <div>📐 Chu vi: ${formatNumber(convertLength(f.chuvi, 'm', unit), unitLabel)}</div>
+        <div>📐 Diện tích (Heron): ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</div>
+        <div>📐 Diện tích (1/2·ab·sinC): ${formatNumber(convertLength(f.area, 'm2', unit), unitLabel + '²')}</div>
+        <div>📐 sin A = ${formatNumber(f.sinA)}, sin B = ${formatNumber(f.sinB)}, sin C = ${formatNumber(f.sinC)}</div>
+        <div>📐 Định lý sin: a/sinA = ${formatNumber(f.a/f.sinA)}, b/sinB = ${formatNumber(f.b/f.sinB)}, c/sinC = ${formatNumber(f.c/f.sinC)}</div>
       `;
 
       document.getElementById('hypothesisList').innerHTML = `
         <li>Cho tam giác ABC</li>
-        <li>AB = ${sides[0].length.toFixed(2)}</li>
-        <li>BC = ${sides[1].length.toFixed(2)}</li>
-        <li>AC = ${sides[2].length.toFixed(2)}</li>
+        <li>AB = ${formatNumber(convertLength(sides[0].length, 'm', unit), unitLabel)}</li>
+        <li>BC = ${formatNumber(convertLength(sides[1].length, 'm', unit), unitLabel)}</li>
+        <li>AC = ${formatNumber(convertLength(sides[2].length, 'm', unit), unitLabel)}</li>
+        <li>∠A = ${formatAngle(angles[0].value)}</li>
+        <li>∠B = ${formatAngle(angles[1].value)}</li>
+        <li>∠C = ${formatAngle(angles[2].value)}</li>
       `;
+
+      let problemSpecific = '';
+      if (currentProblem === 'area') {
+        problemSpecific = `<li>Diện tích: ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</li>`;
+      } else if (currentProblem === 'pythagoras') {
+        const right = Math.abs(f.A - 90) < 1 || Math.abs(f.B - 90) < 1 || Math.abs(f.C - 90) < 1;
+        problemSpecific = `<li>${right ? '✔ Tam giác vuông, thỏa mãn định lý Pythagore' : '✘ Không phải tam giác vuông'}</li>`;
+      } else if (currentProblem === 'sin') {
+        problemSpecific = `<li>a/sinA = ${formatNumber(f.a/f.sinA)}, b/sinB = ${formatNumber(f.b/f.sinB)}, c/sinC = ${formatNumber(f.c/f.sinC)}</li>`;
+      } else if (currentProblem === 'cos') {
+        problemSpecific = `<li>a² = ${formatNumber(f.a*f.a)}, b²+c²−2bc·cosA = ${formatNumber(f.b*f.b + f.c*f.c - 2*f.b*f.c*Math.cos(f.A*Math.PI/180))}</li>`;
+      }
 
       document.getElementById('conclusionList').innerHTML = `
-        <li>∠A = ${angles[0].value.toFixed(2)}°</li>
-        <li>∠B = ${angles[1].value.toFixed(2)}°</li>
-        <li>∠C = ${angles[2].value.toFixed(2)}°</li>
-        <li>Loại: ${classify()}</li>
+        <li>Loại: ${cls.main} (${cls.sub})</li>
+        <li>Chu vi: ${formatNumber(convertLength(f.chuvi, 'm', unit), unitLabel)}</li>
+        <li>Diện tích: ${formatNumber(convertLength(f.heron * f.heron, 'm2', unit), unitLabel + '²')}</li>
+        ${problemSpecific}
+        <li>Định lý sin: a/sinA = b/sinB = c/sinC ≈ ${formatNumber(f.a/f.sinA)}</li>
+        <li>Định lý cos: a² = b² + c² − 2bc·cosA</li>
+        <li>Pythagore (nếu vuông): ${(Math.abs(f.A-90)<1||Math.abs(f.B-90)<1||Math.abs(f.C-90)<1) ? '✔ Thỏa mãn' : '—'}</li>
       `;
     }
 
-    function renderAll() {
-      draw();
-      updateUI();
-    }
+    function renderAll() { draw(); updateUI(); }
 
-    // reset
     window.resetTriangle = function() {
-      points = [
-        { x: canvas.width * 0.25, y: canvas.height * 0.25, id: 'A' },
-        { x: canvas.width * 0.75, y: canvas.height * 0.25, id: 'B' },
-        { x: canvas.width * 0.5, y: canvas.height * 0.75, id: 'C' }
-      ];
+      points = [{ x: 150, y: 100, id: 'A' }, { x: 450, y: 100, id: 'B' }, { x: 300, y: 300, id: 'C' }];
       renderAll();
     };
 
     window.randomTriangle = function() {
       const pad = 50;
       points = [
-        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'A' },
-        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'B' },
-        { x: Math.random() * (canvas.width - pad*2) + pad, y: Math.random() * (canvas.height - pad*2) + pad, id: 'C' }
+        { x: Math.random()*(canvas.width-pad*2)+pad, y: Math.random()*(canvas.height-pad*2)+pad, id: 'A' },
+        { x: Math.random()*(canvas.width-pad*2)+pad, y: Math.random()*(canvas.height-pad*2)+pad, id: 'B' },
+        { x: Math.random()*(canvas.width-pad*2)+pad, y: Math.random()*(canvas.height-pad*2)+pad, id: 'C' }
       ];
       renderAll();
     };
 
-    // events
+    window.applyEditor = function() {
+      const A = parseFloat(document.getElementById('inputA').value);
+      const B = parseFloat(document.getElementById('inputB').value);
+      const C = parseFloat(document.getElementById('inputC').value);
+      const AB = parseFloat(document.getElementById('inputAB').value);
+      const BC = parseFloat(document.getElementById('inputBC').value);
+      const AC = parseFloat(document.getElementById('inputAC').value);
+      
+      if (!isNaN(A) && !isNaN(B) && !isNaN(C) && A+B+C > 179 && A+B+C < 181) {
+        const scale = 200;
+        const ang = [A, B, C].map(d => d * Math.PI / 180);
+        const xA = 200, yA = 300;
+        const xB = xA + scale, yB = yA;
+        const xC = xA + scale * Math.cos(ang[0]) + 0, yC = yA - scale * Math.sin(ang[0]);
+        points = [
+          { x: xA, y: yA, id: 'A' },
+          { x: xB, y: yB, id: 'B' },
+          { x: xC, y: yC, id: 'C' }
+        ];
+        renderAll();
+      } else if (!isNaN(AB) && !isNaN(BC) && !isNaN(AC) && AB+BC>AC && AB+AC>BC && BC+AC>AB) {
+        const xA = 150, yA = 250;
+        const xB = xA + AB * 1.2, yB = yA;
+        const d = (AB*AB + AC*AC - BC*BC) / (2*AB);
+        const h = Math.sqrt(AC*AC - d*d);
+        const xC = xA + d * 1.2, yC = yA - h * 1.2;
+        points = [
+          { x: xA, y: yA, id: 'A' },
+          { x: xB, y: yB, id: 'B' },
+          { x: xC, y: yC, id: 'C' }
+        ];
+        renderAll();
+      } else {
+        alert('Vui lòng nhập góc hợp lệ (tổng 180°) hoặc 3 cạnh hợp lệ.');
+      }
+    };
+
+    window.clearEditor = function() {
+      ['inputA','inputB','inputC','inputAB','inputBC','inputAC'].forEach(id => document.getElementById(id).value = '');
+    };
+
+    window.setProblem = function(problem) {
+      currentProblem = problem;
+      document.querySelectorAll('.problem-selector button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.problem === problem);
+      });
+      renderAll();
+    };
+
+    function getExportData() {
+      const sides = getSides();
+      const angles = getAngles();
+      const cls = classifyDetailed();
+      const f = computeFormulas();
+      const unit = getDisplayUnit();
+      const unitLabel = getUnitLabel(unit);
+      return { sides, angles, cls, f, unit, unitLabel };
+    }
+
+    function formatExport(value, unit = '') {
+      const places = getDecimalPlaces();
+      if (places !== null) {
+        return value.toFixed(places) + (unit ? ' ' + unit : '');
+      }
+      return value.toString() + (unit ? ' ' + unit : '');
+    }
+
+    window.exportPDF = function() {
+      const data = getExportData();
+      const unitFactor = unitFactors[data.unit];
+      
+      const printWindow = window.open('', '_blank', 'width=900,height=700');
+      const content = `
+        <html>
+        <head>
+          <title>Báo cáo tam giác</title>
+          <style>
+            body { font-family: 'Inter', Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+            h1 { color: #1f3d6b; border-bottom: 2px solid #dce2ea; padding-bottom: 10px; }
+            .grid { display: flex; gap: 40px; margin: 20px 0; flex-wrap: wrap; }
+            .col { flex: 1; min-width: 300px; }
+            .info { background: #f8faff; padding: 15px; border: 1px solid #dce2ea; margin: 10px 0; }
+            .label { font-weight: 600; color: #445566; }
+            .value { font-weight: 500; color: #0b1f33; }
+            table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+            td { padding: 8px 12px; border-bottom: 1px solid #edf2f7; }
+            th { text-align: left; padding: 8px 12px; border-bottom: 2px solid #d5dee9; }
+            .badge { background: #f0f6fe; padding: 4px 14px; border: 1px solid #d3def0; display: inline-block; }
+            canvas { border: 1px solid #dce2ea; margin: 20px 0; max-width: 100%; }
+            .footer { margin-top: 30px; font-size: 12px; color: #8899aa; border-top: 1px solid #dce2ea; padding-top: 15px; }
+            .angle-label { font-weight: 600; display: inline-block; margin-right: 8px; }
+            .angle-A { color: #c0392b; }
+            .angle-B { color: #2980b9; }
+            .angle-C { color: #27ae60; }
+          </style>
+        </head>
+        <body>
+          <h1>📐 Báo cáo tam giác ABC</h1>
+          
+          <div class="grid">
+            <div class="col">
+              <div class="info">
+                <div><span class="label">Phân loại:</span> <span class="badge">${data.cls.main}</span></div>
+                <div style="margin-top:6px;"><span class="label">Chi tiết:</span> ${data.cls.sub}</div>
+              </div>
+              
+              <table>
+                <tr><th>Cạnh</th><th style="text-align:right;">Giá trị (${data.unitLabel})</th></tr>
+                ${data.sides.map(s => `<tr><td>${s.name}</td><td style="text-align:right;">${formatExport(convertLength(s.length, 'm', data.unit), data.unitLabel)}</td></tr>`).join('')}
+              </table>
+              
+              <table>
+                <tr><th>Góc</th><th style="text-align:right;">Giá trị</th></tr>
+                ${data.angles.map(a => `<tr><td><span class="angle-label angle-${a.vertex}">∠${a.vertex}</span></td><td style="text-align:right;">${formatAngle(a.value)}</td></tr>`).join('')}
+                <tr style="border-top:2px solid #d5dee9; font-weight:600;"><td>Tổng</td><td style="text-align:right;">${formatAngle(data.angles.reduce((s,a) => s + a.value, 0))}</td></tr>
+              </table>
+              
+              <div class="info">
+                <div><span class="label">Chu vi:</span> ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}</div>
+                <div><span class="label">Diện tích (Heron):</span> ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}</div>
+                <div><span class="label">Diện tích (1/2·ab·sinC):</span> ${formatExport(convertLength(data.f.area, 'm2', data.unit), data.unitLabel + '²')}</div>
+              </div>
+            </div>
+            
+            <div class="col">
+              <canvas id="printCanvas" width="600" height="400"></canvas>
+              <div style="text-align:center; font-size:12px; color:#666; margin-top:5px;">
+                <span class="angle-A">● ∠A</span> <span class="angle-B">● ∠B</span> <span class="angle-C">● ∠C</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="info" style="margin-top:20px;">
+            <h3 style="margin-top:0;">📐 Công thức & Định lý</h3>
+            <div>sin A = ${formatExport(data.f.sinA)}, sin B = ${formatExport(data.f.sinB)}, sin C = ${formatExport(data.f.sinC)}</div>
+            <div>a/sinA = ${formatExport(data.f.a/data.f.sinA)}, b/sinB = ${formatExport(data.f.b/data.f.sinB)}, c/sinC = ${formatExport(data.f.c/data.f.sinC)}</div>
+            <div>a² = ${formatExport(data.f.a*data.f.a)}, b² = ${formatExport(data.f.b*data.f.b)}, c² = ${formatExport(data.f.c*data.f.c)}</div>
+            <div>Pythagore: ${(Math.abs(data.f.A-90)<1||Math.abs(data.f.B-90)<1||Math.abs(data.f.C-90)<1) ? '✔ Thỏa mãn' : '—'}</div>
+          </div>
+          
+          <div class="footer">Xuất từ công cụ tam giác · ${new Date().toLocaleString()}</div>
+          
+          <script>
+            const c = document.getElementById('printCanvas');
+            const ctx = c.getContext('2d');
+            const points = ${JSON.stringify(points)};
+            
+            function dist(p1, p2) { return Math.hypot(p2.x - p1.x, p2.y - p1.y); }
+            function angleDeg(p1, p2, p3) {
+              const a = dist(p2, p3), b = dist(p1, p3), c = dist(p1, p2);
+              const cosC = (a*a + b*b - c*c) / (2*a*b);
+              const clamped = Math.max(-1, Math.min(1, cosC));
+              return (Math.acos(clamped) * 180) / Math.PI;
+            }
+            
+            function formatAngle(v) {
+              return Math.round(v) + '°';
+            }
+            
+            function formatNum(v) {
+              const places = ${getDecimalPlaces() !== null ? getDecimalPlaces() : 2};
+              return v.toFixed(places);
+            }
+            
+            function drawPrint() {
+              ctx.clearRect(0, 0, c.width, c.height);
+              ctx.strokeStyle = '#e9edf4';
+              ctx.lineWidth = 0.6;
+              for (let i = 0; i < c.width; i += 50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,c.height); ctx.stroke(); }
+              for (let i = 0; i < c.height; i += 50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(c.width,i); ctx.stroke(); }
+              
+              const sides = [
+                { name: 'AB', length: dist(points[0], points[1]) },
+                { name: 'BC', length: dist(points[1], points[2]) },
+                { name: 'AC', length: dist(points[0], points[2]) }
+              ];
+              const angles = [
+                { vertex: 'A', value: angleDeg(points[0], points[1], points[2]) },
+                { vertex: 'B', value: angleDeg(points[1], points[0], points[2]) },
+                { vertex: 'C', value: angleDeg(points[2], points[0], points[1]) }
+              ];
+              
+              ctx.strokeStyle = '#1f3d6b';
+              ctx.lineWidth = 2.4;
+              ctx.beginPath();
+              ctx.moveTo(points[0].x, points[0].y);
+              ctx.lineTo(points[1].x, points[1].y);
+              ctx.lineTo(points[2].x, points[2].y);
+              ctx.closePath();
+              ctx.stroke();
+              
+              const unit = '${data.unit}';
+              const unitLabel = '${data.unitLabel}';
+              const unitFactor = ${unitFactor};
+              
+              ctx.fillStyle = '#1a2d47';
+              ctx.font = '500 13px Inter, sans-serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              
+              const labels = sides.map(s => {
+                const val = s.length * unitFactor;
+                return formatNum(val) + ' ' + unitLabel;
+              });
+              
+              const midAB = { x: (points[0].x+points[1].x)/2, y: (points[0].y+points[1].y)/2 - 14 };
+              ctx.fillText(labels[0], midAB.x, midAB.y);
+              const midBC = { x: (points[1].x+points[2].x)/2 + 18, y: (points[1].y+points[2].y)/2 + 4 };
+              ctx.textBaseline = 'middle';
+              ctx.fillText(labels[1], midBC.x, midBC.y);
+              const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
+              ctx.fillText(labels[2], midAC.x, midAC.y);
+              
+              // Draw angle arcs
+              const radius = 30;
+              
+              ctx.strokeStyle = '#c0392b';
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              const startA = Math.atan2(points[1].y - points[0].y, points[1].x - points[0].x);
+              const endA = Math.atan2(points[2].y - points[0].y, points[2].x - points[0].x);
+              ctx.arc(points[0].x, points[0].y, radius, startA, endA);
+              ctx.stroke();
+              
+              ctx.strokeStyle = '#2980b9';
+              ctx.beginPath();
+              const startB = Math.atan2(points[0].y - points[1].y, points[0].x - points[1].x);
+              const endB = Math.atan2(points[2].y - points[1].y, points[2].x - points[1].x);
+              ctx.arc(points[1].x, points[1].y, radius, startB, endB);
+              ctx.stroke();
+              
+              ctx.strokeStyle = '#27ae60';
+              ctx.beginPath();
+              const startC = Math.atan2(points[1].y - points[2].y, points[1].x - points[2].x);
+              const endC = Math.atan2(points[0].y - points[2].y, points[0].x - points[2].x);
+              ctx.arc(points[2].x, points[2].y, radius, startC, endC);
+              ctx.stroke();
+              
+              // Angle labels
+              const angleLabels = angles.map(a => formatAngle(a.value));
+              
+              points.forEach((p, i) => {
+                ctx.fillStyle = '#1f3d6b';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#0b1d32';
+                ctx.font = 'bold 14px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(p.id, p.x, p.y - 12);
+                
+                ctx.fillStyle = ['#c0392b', '#2980b9', '#27ae60'][i];
+                ctx.font = '12px Inter, sans-serif';
+                ctx.textBaseline = 'bottom';
+                const anglePos = {
+                  0: { x: p.x + 45 * Math.cos((startA + endA)/2), y: p.y + 45 * Math.sin((startA + endA)/2) },
+                  1: { x: p.x + 45 * Math.cos((startB + endB)/2), y: p.y + 45 * Math.sin((startB + endB)/2) },
+                  2: { x: p.x + 45 * Math.cos((startC + endC)/2), y: p.y + 45 * Math.sin((startC + endC)/2) }
+                };
+                ctx.fillText(angleLabels[i], anglePos[i].x, anglePos[i].y);
+              });
+            }
+            drawPrint();
+            
+            window.onload = function() {
+              setTimeout(() => {
+                window.print();
+              }, 500);
+            };
+          <\/script>
+        </body>
+        </html>
+      `;
+      
+      printWindow.document.write(content);
+      printWindow.document.close();
+    };
+
+    window.exportMarkdown = function() {
+      const data = getExportData();
+      const md = `
+# Tam giác ABC
+- **Loại**: ${data.cls.main} (${data.cls.sub})
+- **Cạnh (${data.unitLabel})**: AB = ${formatExport(convertLength(data.sides[0].length, 'm', data.unit), data.unitLabel)}, BC = ${formatExport(convertLength(data.sides[1].length, 'm', data.unit), data.unitLabel)}, AC = ${formatExport(convertLength(data.sides[2].length, 'm', data.unit), data.unitLabel)}
+- **Góc**: ∠A = ${formatAngle(data.angles[0].value)}, ∠B = ${formatAngle(data.angles[1].value)}, ∠C = ${formatAngle(data.angles[2].value)}
+- **Chu vi**: ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}
+- **Diện tích (Heron)**: ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}
+- **Định lý sin**: a/sinA = ${formatExport(data.f.a/data.f.sinA)}
+      `;
+      const blob = new Blob([md], {type: 'text/markdown'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `tamgiac_${data.unit}.md`;
+      a.click();
+    };
+
+    window.exportExam = function() {
+      const data = getExportData();
+      const exam = `
+ĐỀ KIỂM TRA HÌNH HỌC
+Cho tam giác ABC với:
+AB = ${formatExport(convertLength(data.sides[0].length, 'm', data.unit), data.unitLabel)}
+BC = ${formatExport(convertLength(data.sides[1].length, 'm', data.unit), data.unitLabel)}
+AC = ${formatExport(convertLength(data.sides[2].length, 'm', data.unit), data.unitLabel)}
+∠A = ${formatAngle(data.angles[0].value)}
+∠B = ${formatAngle(data.angles[1].value)}
+∠C = ${formatAngle(data.angles[2].value)}
+
+Yêu cầu:
+1. Tính chu vi tam giác.
+2. Tính diện tích tam giác (công thức Heron).
+3. Xác định loại tam giác.
+4. Áp dụng định lý sin, tính tỉ số a/sinA.
+
+Đáp án:
+Chu vi = ${formatExport(convertLength(data.f.chuvi, 'm', data.unit), data.unitLabel)}
+Diện tích = ${formatExport(convertLength(data.f.heron * data.f.heron, 'm2', data.unit), data.unitLabel + '²')}
+Loại = ${data.cls.main}
+a/sinA = ${formatExport(data.f.a/data.f.sinA)}
+      `;
+      const blob = new Blob([exam], {type: 'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `de_thi_tamgiac_${data.unit}.txt`;
+      a.click();
+    };
+
+    window.printCanvas = function() {
+      const wrapper = document.getElementById('canvasWrapper');
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
+      printWindow.document.write(`
+        <html><head><title>Hình tam giác</title>
+        <style>
+          body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: white; flex-direction: column; }
+          canvas { max-width: 100%; height: auto; border: 1px solid #ddd; }
+          .info { font-family: Arial, sans-serif; margin-top: 20px; font-size: 14px; }
+          .info div { margin: 4px 0; }
+          .info .label { font-weight: 600; }
+          .angle-A { color: #c0392b; }
+          .angle-B { color: #2980b9; }
+          .angle-C { color: #27ae60; }
+          button { position: fixed; top: 20px; right: 20px; padding: 10px 20px; cursor: pointer; }
+        </style>
+        </head><body>
+        <canvas id="printCanvas" width="600" height="400"></canvas>
+        <div class="info" id="infoDisplay"></div>
+        <button onclick="window.print()">🖨️ In</button>
+        <script>
+          const c = document.getElementById('printCanvas');
+          const ctx = c.getContext('2d');
+          const points = ${JSON.stringify(points)};
+          const unit = '${getDisplayUnit()}';
+          const unitLabel = '${getUnitLabel(getDisplayUnit())}';
+          
+          function dist(p1, p2) { return Math.hypot(p2.x - p1.x, p2.y - p1.y); }
+          function angleDeg(p1, p2, p3) {
+            const a = dist(p2, p3), b = dist(p1, p3), c = dist(p1, p2);
+            const cosC = (a*a + b*b - c*c) / (2*a*b);
+            const clamped = Math.max(-1, Math.min(1, cosC));
+            return (Math.acos(clamped) * 180) / Math.PI;
+          }
+          
+          function formatNum(v) {
+            const places = ${getDecimalPlaces() !== null ? getDecimalPlaces() : 2};
+            return v.toFixed(places);
+          }
+          
+          function formatAngle(v) {
+            return Math.round(v) + '°';
+          }
+          
+          function drawPrint() {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.strokeStyle = '#e9edf4';
+            ctx.lineWidth = 0.6;
+            for (let i = 0; i < c.width; i += 50) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,c.height); ctx.stroke(); }
+            for (let i = 0; i < c.height; i += 50) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(c.width,i); ctx.stroke(); }
+            
+            const sides = [
+              { name: 'AB', length: dist(points[0], points[1]) },
+              { name: 'BC', length: dist(points[1], points[2]) },
+              { name: 'AC', length: dist(points[0], points[2]) }
+            ];
+            const angles = [
+              { vertex: 'A', value: angleDeg(points[0], points[1], points[2]) },
+              { vertex: 'B', value: angleDeg(points[1], points[0], points[2]) },
+              { vertex: 'C', value: angleDeg(points[2], points[0], points[1]) }
+            ];
+            
+            ctx.strokeStyle = '#1f3d6b';
+            ctx.lineWidth = 2.4;
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            ctx.lineTo(points[1].x, points[1].y);
+            ctx.lineTo(points[2].x, points[2].y);
+            ctx.closePath();
+            ctx.stroke();
+            
+            // Side labels
+            ctx.fillStyle = '#1a2d47';
+            ctx.font = '500 13px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            const midAB = { x: (points[0].x+points[1].x)/2, y: (points[0].y+points[1].y)/2 - 14 };
+            ctx.fillText(formatNum(sides[0].length) + ' ' + unitLabel, midAB.x, midAB.y);
+            const midBC = { x: (points[1].x+points[2].x)/2 + 18, y: (points[1].y+points[2].y)/2 + 4 };
+            ctx.textBaseline = 'middle';
+            ctx.fillText(formatNum(sides[1].length) + ' ' + unitLabel, midBC.x, midBC.y);
+            const midAC = { x: (points[0].x+points[2].x)/2 - 18, y: (points[0].y+points[2].y)/2 + 4 };
+            ctx.fillText(formatNum(sides[2].length) + ' ' + unitLabel, midAC.x, midAC.y);
+            
+            // Angle arcs
+            const radius = 30;
+            
+            ctx.strokeStyle = '#c0392b';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            const startA = Math.atan2(points[1].y - points[0].y, points[1].x - points[0].x);
+            const endA = Math.atan2(points[2].y - points[0].y, points[2].x - points[0].x);
+            ctx.arc(points[0].x, points[0].y, radius, startA, endA);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#2980b9';
+            ctx.beginPath();
+            const startB = Math.atan2(points[0].y - points[1].y, points[0].x - points[1].x);
+            const endB = Math.atan2(points[2].y - points[1].y, points[2].x - points[1].x);
+            ctx.arc(points[1].x, points[1].y, radius, startB, endB);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#27ae60';
+            ctx.beginPath();
+            const startC = Math.atan2(points[1].y - points[2].y, points[1].x - points[2].x);
+            const endC = Math.atan2(points[0].y - points[2].y, points[0].x - points[2].x);
+            ctx.arc(points[2].x, points[2].y, radius, startC, endC);
+            ctx.stroke();
+            
+            // Vertices with angle labels
+            points.forEach((p, i) => {
+              ctx.fillStyle = '#1f3d6b';
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, 7, 0, 2 * Math.PI);
+              ctx.fill();
+              ctx.strokeStyle = 'white';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+              ctx.fillStyle = '#0b1d32';
+              ctx.font = 'bold 14px Inter, sans-serif';
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'bottom';
+              ctx.fillText(p.id, p.x, p.y - 12);
+              
+              ctx.fillStyle = ['#c0392b', '#2980b9', '#27ae60'][i];
+              ctx.font = '12px Inter, sans-serif';
+              ctx.textBaseline = 'bottom';
+              const anglePos = {
+                0: { x: p.x + 45 * Math.cos((startA + endA)/2), y: p.y + 45 * Math.sin((startA + endA)/2) },
+                1: { x: p.x + 45 * Math.cos((startB + endB)/2), y: p.y + 45 * Math.sin((startB + endB)/2) },
+                2: { x: p.x + 45 * Math.cos((startC + endC)/2), y: p.y + 45 * Math.sin((startC + endC)/2) }
+              };
+              ctx.fillText(formatAngle(angles[i].value), anglePos[i].x, anglePos[i].y);
+            });
+            
+            // Info display with 3 angles clearly shown
+            const info = document.getElementById('infoDisplay');
+            const total = angles.reduce((s,a) => s + a.value, 0);
+            info.innerHTML = \`
+              <div><span class="label">Cạnh:</span> AB = \${formatNum(sides[0].length)} \${unitLabel}, BC = \${formatNum(sides[1].length)} \${unitLabel}, AC = \${formatNum(sides[2].length)} \${unitLabel}</div>
+              <div><span class="label">Góc:</span> <span class="angle-A">∠A = \${formatAngle(angles[0].value)}</span>, <span class="angle-B">∠B = \${formatAngle(angles[1].value)}</span>, <span class="angle-C">∠C = \${formatAngle(angles[2].value)}</span> (Tổng = \${formatAngle(total)})</div>
+            \`;
+          }
+          drawPrint();
+        <\/script>
+        </body></html>
+      `);
+      printWindow.document.close();
+    };
+
     function getMousePos(e) {
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width;
@@ -565,38 +1357,26 @@
     canvas.addEventListener('mousedown', (e) => {
       const pos = getMousePos(e);
       const hit = points.find(p => Math.hypot(p.x - pos.x, p.y - pos.y) < 16);
-      if (hit) {
-        dragging = hit;
-        canvas.style.cursor = 'grabbing';
-        e.preventDefault();
-      }
+      if (hit) { dragging = hit; canvas.style.cursor = 'grabbing'; e.preventDefault(); }
     });
 
     document.addEventListener('mousemove', (e) => {
       if (!dragging) return;
       const pos = getMousePos(e);
-      let x = Math.max(20, Math.min(pos.x, canvas.width - 20));
-      let y = Math.max(20, Math.min(pos.y, canvas.height - 20));
-      dragging.x = x;
-      dragging.y = y;
+      dragging.x = Math.max(20, Math.min(pos.x, canvas.width - 20));
+      dragging.y = Math.max(20, Math.min(pos.y, canvas.height - 20));
       renderAll();
     });
 
-    document.addEventListener('mouseup', () => {
-      if (dragging) {
-        dragging = null;
-        canvas.style.cursor = 'grab';
-      }
-    });
+    document.addEventListener('mouseup', () => { if (dragging) { dragging = null; canvas.style.cursor = 'grab'; } });
+    canvas.addEventListener('mouseenter', () => { canvas.style.cursor = 'grab'; });
 
-    canvas.addEventListener('mouseenter', () => {
-      canvas.style.cursor = 'grab';
-    });
+    document.getElementById('unitSelect').addEventListener('change', renderAll);
+    document.getElementById('roundDecimals').addEventListener('change', renderAll);
+    document.getElementById('decimalPlaces').addEventListener('change', renderAll);
+    document.getElementById('roundAngles').addEventListener('change', renderAll);
 
-    // init
-    window.addEventListener('load', () => {
-      resetTriangle();
-    });
+    window.addEventListener('load', resetTriangle);
   })();
 </script>
 </body>
